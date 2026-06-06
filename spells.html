@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spells — Hogarth MC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Cormorant+SC:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+main{max-width:1100px;margin:0 auto;padding:3.5rem clamp(1.5rem,5vw,3rem);}
+
+.spells-wrapper{display:flex;flex-direction:column;gap:3rem;}
+
+.spell-section-header{display:flex;align-items:center;gap:1.4rem;margin-bottom:1.6rem;}
+.spell-section-label{font-family:'Cormorant SC',serif;font-size:.62rem;letter-spacing:.42em;text-transform:uppercase;color:var(--ink4);white-space:nowrap;flex-shrink:0;}
+.spell-section-rule{flex:1;height:1px;background:rgba(26,19,10,.13);}
+.spell-section-badge{font-family:'Cormorant SC',serif;font-size:.46rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(100,40,20,.6);border:1px solid rgba(100,40,20,.22);padding:.2rem .65rem;white-space:nowrap;flex-shrink:0;}
+
+.spells-cols{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0 3.5rem;}
+.spells-cols-wide{display:grid;grid-template-columns:1fr 1fr;gap:0 3.5rem;}
+.spells-cols-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 3.5rem;}
+
+.spell-entry{padding:1.15rem 0;border-bottom:1px solid rgba(26,19,10,.07);}
+.spell-entry:last-child{border-bottom:none;}
+.spell-entry-top{display:flex;align-items:baseline;gap:.8rem;margin-bottom:.4rem;flex-wrap:wrap;}
+
+.spell-name{font-family:'IM Fell English',serif;font-style:italic;font-size:1.14rem;color:var(--ink);flex-shrink:0;}
+.spell-name.restricted{color:var(--ink2);}
+
+.spell-badge{font-family:'Cormorant SC',serif;font-size:.44rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(100,40,20,.65);border:1px solid rgba(100,40,20,.24);padding:.16rem .5rem;white-space:nowrap;align-self:center;}
+
+.spell-desc{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:.97rem;color:var(--ink3);line-height:1.85;margin-bottom:.3rem;}
+.spell-meta{font-family:'Cormorant SC',serif;font-size:.48rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink5);}
+
+@media(max-width:800px){
+  .spells-cols-3,.spells-cols-wide{grid-template-columns:1fr;}
+}
+@media(max-width:560px){
+  .spells-cols{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+<main>
+  <div class="about-eye eyebrow">The Arcane Lexicon</div>
+  <h1 class="section-title" style="margin-bottom:2.8rem;">Spells of <em>Hogarth</em></h1>
+
+  <div class="spells-wrapper">
+
+    <!-- Utility -->
+    <div class="spell-section">
+      <div class="spell-section-header"><span class="spell-section-label">Utility</span><div class="spell-section-rule"></div></div>
+      <div class="spells-cols">
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Inlumino</span></div><div class="spell-desc">Produces light from the tip of the wand.</div><div class="spell-meta">Charm · Incantation · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Nox</span></div><div class="spell-desc">Counter-spell for Inlumino.</div><div class="spell-meta">Charm · Incantation · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Oblitera</span></div><div class="spell-desc">Erases a specific memory from an individual's mind.</div><div class="spell-meta">Charm · Incantation · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Inlusio</span></div><div class="spell-desc">Makes the caster camouflage with their surroundings.</div><div class="spell-meta">Charm · Non-Verbal · Short range</div></div>
+      </div>
+    </div>
+
+    <!-- Essential -->
+    <div class="spell-section">
+      <div class="spell-section-header"><span class="spell-section-label">Essential</span><div class="spell-section-rule"></div></div>
+      <div class="spells-cols">
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Clostramora</span></div><div class="spell-desc">Unlocks doors, chests and other objects with locks.</div><div class="spell-meta">Charm · Incantation · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Defensio</span></div><div class="spell-desc">Creates a shield that protects the caster from incoming spells and attacks.</div><div class="spell-meta">Charm · Incantation or Non-Verbal · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Claresco</span></div><div class="spell-desc">Reveals hidden objects and enemies.</div><div class="spell-meta">Charm · Incantation · Short &amp; Long range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Basic Cast</span></div><div class="spell-desc">Deals a small amount of damage; used to strike objects and enemies.</div><div class="spell-meta">Spell · Non-Verbal · Short &amp; Long range</div></div>
+      </div>
+    </div>
+
+    <!-- Control -->
+    <div class="spell-section">
+      <div class="spell-section-header"><span class="spell-section-label">Control</span><div class="spell-section-rule"></div></div>
+      <div class="spells-cols">
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Vectatio</span></div><div class="spell-desc">Levitates an object which can then be moved around freely.</div><div class="spell-meta">Charm · Incantation · Short &amp; Long range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Gradarius Momentum</span></div><div class="spell-desc">Slows down an object or enemy for a short amount of time.</div><div class="spell-meta">Charm · Incantation · Short &amp; Long range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Volatilis</span></div><div class="spell-desc">Levitates an object or an enemy into the air.</div><div class="spell-meta">Spell · Incantation · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Transformare</span></div><div class="spell-desc">Transforms objects and enemies into random objects the caster envisions.</div><div class="spell-meta">Spell · Non-Verbal · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Glacio</span></div><div class="spell-desc">Freezes enemies, slowing or halting their movement.</div><div class="spell-meta">Spell · Incantation · Short &amp; Long range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Petrificare Totus</span></div><div class="spell-desc">Petrifies enemies, binding their full bodies in place.</div><div class="spell-meta">Jinx · Incantation · Short range</div></div>
+      </div>
+    </div>
+
+    <!-- Force -->
+    <div class="spell-section">
+      <div class="spell-section-header"><span class="spell-section-label">Force</span><div class="spell-section-rule"></div></div>
+      <div class="spells-cols">
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Detrudo</span></div><div class="spell-desc">Pushes objects or enemies away from the caster.</div><div class="spell-meta">Charm · Incantation · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Arcessio</span></div><div class="spell-desc">Summons an object, bringing it closer to the caster.</div><div class="spell-meta">Charm · Incantation · Short &amp; Long range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Descendere</span></div><div class="spell-desc">Slams an object or enemy downwards with great force.</div><div class="spell-meta">Spell · Incantation · Short &amp; Long range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Volubilis</span></div><div class="spell-desc">Flips a subject or enemy upwards and backwards.</div><div class="spell-meta">Jinx · Incantation · Short &amp; Long range</div></div>
+      </div>
+    </div>
+
+    <!-- Transfiguration -->
+    <div class="spell-section">
+      <div class="spell-section-header"><span class="spell-section-label">Transfiguration</span><div class="spell-section-rule"></div></div>
+      <div class="spells-cols">
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Vanesco</span></div><div class="spell-desc">Causes inanimate and animate objects to vanish entirely.</div><div class="spell-meta">Spell · Incantation · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Transverto</span></div><div class="spell-desc">Changes the colour and form of conjured objects, such as robes.</div><div class="spell-meta">Spell · Incantation · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Ecficio</span></div><div class="spell-desc">Conjures an object into existence. Requires a spellcraft and replacement material.</div><div class="spell-meta">Spell · Incantation · Short range</div></div>
+      </div>
+    </div>
+
+    <!-- Damage -->
+    <div class="spell-section">
+      <div class="spell-section-header"><span class="spell-section-label">Damage</span><div class="spell-section-rule"></div></div>
+      <div class="spells-cols">
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Incendo</span></div><div class="spell-desc">Sets objects and enemies on fire.</div><div class="spell-meta">Spell · Incantation · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Stupefy</span></div><div class="spell-desc">Stuns enemies, causing them to receive more damage from follow-up spells.</div><div class="spell-meta">Spell · Incantation · Short &amp; Long range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Expelloarmis</span></div><div class="spell-desc">Disarms enemies holding wands and other weapons.</div><div class="spell-meta">Spell · Incantation · Short &amp; Long range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Interitus</span></div><div class="spell-desc">Creates an explosion at the targeted area.</div><div class="spell-meta">Spell · Incantation · Long range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Conflagro</span></div><div class="spell-desc">Produces sharp bursts of fire to damage enemies.</div><div class="spell-meta">Spell · Incantation · Long range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Lacero</span></div><div class="spell-desc">Slashes objects and enemies with blades of magic energy.</div><div class="spell-meta">Spell · Incantation · Long range</div></div>
+      </div>
+    </div>
+
+    <!-- Dark Magic -->
+    <div class="spell-section">
+      <div class="spell-section-header">
+        <span class="spell-section-label">Dark Magic</span>
+        <div class="spell-section-rule"></div>
+        <span class="spell-section-badge">Trio of Maleficium</span>
+      </div>
+      <div class="spells-cols-3">
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name restricted">Imperium</span><span class="spell-badge">Curse · Forbidden</span></div><div class="spell-desc">Controls the actions of the caster's victim against their will.</div><div class="spell-meta">Incantation · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name restricted">Crucia</span><span class="spell-badge">Curse · Forbidden</span></div><div class="spell-desc">Also known as the Cruciamentum Curse. Inflicts excruciating pain on the victim — unblockable by any protection charm.</div><div class="spell-meta">Incantation · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name restricted">Avada Kedavra</span><span class="spell-badge">Curse · Forbidden</span></div><div class="spell-desc">Kills any living being instantly.</div><div class="spell-meta">Incantation · Short &amp; Long range</div></div>
+      </div>
+    </div>
+
+    <!-- Ancient Magick -->
+    <div class="spell-section">
+      <div class="spell-section-header"><span class="spell-section-label">Ancient Magick &amp; Unregistered</span><div class="spell-section-rule"></div></div>
+      <div class="spells-cols-wide">
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name restricted">Nepenthe</span><span class="spell-badge">Ancient · Restricted</span></div><div class="spell-desc">Created by Isadora Morganach, c. 15th Century. Uses ancient magick to extract mental and physical pain from an individual. It corrupts ancient magick and must be contained — overuse drains all emotion from the target, and those who absorb too much corrupted magick risk lethal consequences.</div><div class="spell-meta">Spell · Non-Verbal · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name restricted">Aviscero</span><span class="spell-badge">Unregistered</span></div><div class="spell-desc">Created by Xylina Morganach, late 1940s. Mangles objects and enemies by slashing them with multiple blades of magic energy simultaneously.</div><div class="spell-meta">Spell · Non-Verbal · Short &amp; Long range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name restricted">Reticeo</span><span class="spell-badge">Unregistered</span></div><div class="spell-desc">Silences its victim, taking away their ability to make any noise.</div><div class="spell-meta">Spell · Non-Verbal · Short range</div></div>
+        <div class="spell-entry"><div class="spell-entry-top"><span class="spell-name">Recitare</span></div><div class="spell-desc">The counter-spell for Reticeo.</div><div class="spell-meta">Spell · Non-Verbal · Short range</div></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+<div class="toast" id="toast"><strong id="tt"></strong><p id="tm"></p></div>
+<script src="shared.js"></script>
+<script src="nav-loader.js"></script>
+</body>
+</html>

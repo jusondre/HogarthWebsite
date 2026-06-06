@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff — Hogarth MC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Cormorant+SC:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3.5rem clamp(1.5rem, 5vw, 3rem);
+}
+
+/* Intro paragraph — mirroring disclaimer's body style */
+.staff-intro-p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.03rem;
+  color: var(--ink2);
+  line-height: 2.1;
+  max-width: 700px;
+  margin-bottom: 3.5rem;
+}
+
+/* Divider — same as disclaimer */
+.disc-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin: 2.5rem 0;
+}
+.disc-divider-line { flex: 1; height: 1px; background: rgba(26,19,10,.1); }
+.disc-divider-dot  { width: 3px; height: 3px; border-radius: 50%; background: rgba(26,19,10,.22); }
+
+/* ── Staff entry — left-bordered like disc-block ── */
+.staff-entry {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0 3rem;
+  border-left: 2px solid rgba(26,19,10,.14);
+  padding-left: 2.2rem;
+  margin-bottom: 0;
+  align-items: center;
+  transition: border-color .3s;
+}
+.staff-entry:hover {
+  border-color: rgba(122,90,32,.55);
+}
+
+/* Skin portrait */
+.skin-col {
+  padding-top: .15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .65rem;
+}
+
+.skin-render-wrap {
+  width: 160px;
+  height: 210px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  image-rendering: pixelated;
+  position: relative;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+}
+.skin-render-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: block;
+  transition: opacity .4s ease;
+}
+.skin-render-wrap img.loading { opacity: .35; }
+
+.skin-fallback {
+  display: none;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.8rem;
+  color: var(--ink5);
+}
+
+/* Text column */
+.staff-text-col { padding-top: .05rem; }
+
+.staff-rank-badge {
+  display: inline-block;
+  font-family: 'Cormorant SC', serif;
+  font-size: .47rem;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: rgba(122,90,32,.75);
+  border: 1px solid rgba(122,90,32,.32);
+  padding: .22rem .65rem;
+  margin-bottom: .75rem;
+}
+
+.staff-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.52rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: .55rem;
+  line-height: 1.2;
+}
+
+.staff-role {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 1.03rem;
+  color: var(--ink2);
+  line-height: 2.1;
+}
+
+/* Vacant note — mirrors disc-note */
+.staff-vacant-note {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: .95rem;
+  color: var(--ink3);
+  line-height: 1.95;
+  padding: 1.5rem 1.9rem;
+  border: 1px solid rgba(26,19,10,.1);
+  background: rgba(245,237,224,.5);
+  margin-top: 2.8rem;
+}
+.staff-vacant-note strong {
+  font-family: 'Cormorant SC', serif;
+  font-size: .55rem;
+  letter-spacing: .38em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--ink2);
+}
+
+/* Separator between staff entries */
+.staff-sep {
+  height: 2.5rem;
+}
+
+@media (max-width: 520px) {
+  .staff-entry {
+    grid-template-columns: 1fr;
+    gap: 1.2rem 0;
+  }
+  .skin-col { flex-direction: row; align-items: flex-end; gap: 1rem; }
+  .skin-render-wrap { width: 110px; height: 145px; }
+}
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+<main>
+  <div class="eyebrow">The Council of Hogarth</div>
+  <h1 class="section-title">Those who <em>keep</em> the castle</h1>
+  <p class="staff-intro-p">Behind every stone of Hogarth stands a person who chose to give it life. The staff who maintain these halls are its founders, its architects, and its guardians — present in every rule written, every event conjured, every door held open.</p>
+
+  <!-- Ondre -->
+  <div class="staff-entry">
+    <div class="skin-col">
+      <div class="skin-render-wrap">
+        <img id="skin-ondre"
+             src="https://render.crafty.gg/3d/bust/Ondre"
+             alt="Ondre's Minecraft skin"
+             class="loading"
+             onload="this.classList.remove('loading')"
+             onerror="skinFail('ondre')">
+        <div class="skin-fallback" id="fb-ondre">On</div>
+      </div>
+    </div>
+    <div class="staff-text-col">
+      <div class="staff-rank-badge">Minister</div>
+      <div class="staff-name">Ondre</div>
+      <p class="staff-role">Co-founder of Hogarth Academy. Architect of the server's foundations and keeper of its original vision. His hand is in every wall.</p>
+    </div>
+  </div>
+
+  <div class="staff-sep"></div>
+
+  <div class="disc-divider">
+    <div class="disc-divider-line"></div><div class="disc-divider-dot"></div><div class="disc-divider-line"></div>
+  </div>
+
+  <div class="staff-sep" style="height:1.5rem;"></div>
+
+  <!-- Cxyb3ria -->
+  <div class="staff-entry">
+    <div class="skin-col">
+      <div class="skin-render-wrap">
+        <img id="skin-cxyb3ria"
+             src="https://render.crafty.gg/3d/bust/cxyb3ria"
+             alt="Cxyb3ria's Minecraft skin"
+             class="loading"
+             onload="this.classList.remove('loading')"
+             onerror="skinFail('cxyb3ria')">
+        <div class="skin-fallback" id="fb-cxyb3ria">cx</div>
+      </div>
+    </div>
+    <div class="staff-text-col">
+      <div class="staff-rank-badge">Minister</div>
+      <div class="staff-name">Cxyb3ria</div>
+      <p class="staff-role">Co-founder of Hogarth Academy. Creator of the original lore, spells, and characters that breathe life into the Magickal World of 1955.</p>
+    </div>
+  </div>
+
+  <div class="staff-sep"></div>
+
+  <div class="disc-divider">
+    <div class="disc-divider-line"></div><div class="disc-divider-dot"></div><div class="disc-divider-line"></div>
+  </div>
+
+  <!-- Vacant note -->
+  <div class="staff-vacant-note">
+    <strong>Further Appointments</strong><br><br>
+    The staff roster grows as the castle does. Those who join these halls in the days ahead will be named in their own time — announced first within Discord, then recorded here among the council.
+  </div>
+
+</main>
+
+<div class="toast" id="toast"><strong id="tt"></strong><p id="tm"></p></div>
+<script src="shared.js"></script>
+<script src="nav-loader.js"></script>
+<script>
+function skinFail(id) {
+  const img = document.getElementById('skin-' + id);
+  const fb  = document.getElementById('fb-' + id);
+  if (img) img.style.display = 'none';
+  if (fb)  fb.style.display  = 'flex';
+}
+</script>
+</body>
+</html>

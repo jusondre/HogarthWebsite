@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Grand Emporium — Hogarth MC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Cormorant+SC:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+main.centered{min-height:calc(100vh - 62px);}
+.shop-t{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(1.8rem,4.5vw,3rem);color:var(--ink);margin-bottom:.4em;}
+.shop-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:1rem;color:var(--ink4);max-width:360px;margin:0 auto 2.8rem;line-height:1.9;}
+.shop-tiles{display:flex;gap:1px;max-width:660px;width:100%;background:rgba(26,19,10,.12);border:1px solid rgba(26,19,10,.12);}
+.s-tile{flex:1;background:var(--paper2);padding:1.8rem 1.4rem;transition:background .3s;text-align:center;}
+.s-tile:hover{background:rgba(227,212,191,.85);}
+.s-tile-i{font-size:1.5rem;display:block;margin-bottom:.7rem;opacity:.65;}
+.s-tile-n{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;color:var(--ink);margin-bottom:.3rem;}
+.s-tile-d{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.82rem;color:var(--ink4);line-height:1.6;}
+.shop-note{margin-top:1.8rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:var(--ink4);}
+.shop-note a{color:var(--ink3);text-decoration:underline;text-underline-offset:3px;transition:color .2s;cursor:pointer;}
+.shop-note a:hover{color:var(--ink);}
+@media(max-width:600px){.shop-tiles{flex-direction:column;}}
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+<main class="centered">
+  <h2 class="shop-t">The Grand Emporium</h2>
+  <p class="shop-sub">The shop is having its final enchantments applied. Return when the candles are lit.</p>
+  <div class="shop-tiles">
+    <div class="s-tile"><span class="s-tile-i">⚔️</span><div class="s-tile-n">Ranks</div><div class="s-tile-d">Prefect · Seeker · Auror · Archmage</div></div>
+    <div class="s-tile"><span class="s-tile-i">✨</span><div class="s-tile-n">Cosmetics</div><div class="s-tile-d">Trails, cloaks &amp; artefacts</div></div>
+    <div class="s-tile"><span class="s-tile-i">🦉</span><div class="s-tile-n">Familiars</div><div class="s-tile-d">Loyal companions await</div></div>
+  </div>
+  <p class="shop-note"><a onclick="showToast('Noted','We\'ll let you know when the shop opens.')">Notify me when the shop opens →</a></p>
+</main>
+<div class="toast" id="toast"><strong id="tt"></strong><p id="tm"></p></div>
+<script src="shared.js"></script>
+<script src="nav-loader.js"></script>
+</body>
+</html>

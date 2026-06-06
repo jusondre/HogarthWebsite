@@ -1,0 +1,25 @@
+<nav>
+  <a class="nav-logo" href="index.html">Hogarth<sup>MC</sup></a>
+  <ul class="nav-tabs">
+    <li><a class="nav-tab" data-page="home"       href="index.html">Home</a></li>
+    <li><a class="nav-tab" data-page="howtoplay"  href="howtoplay.html">How to Play</a></li>
+    <li><a class="nav-tab" data-page="shop"       href="shop.html">Shop</a></li>
+    <li class="nav-lore-wrap" id="lore-nav-wrap">
+      <button class="nav-tab" id="lore-nav-btn" onclick="toggleLoreDropdown(event)">
+        Lore <span class="lore-caret"></span>
+      </button>
+      <div class="lore-dropdown" id="lore-dropdown">
+        <a class="lore-dd-item" data-lore="about"    href="about.html">About Hogarth</a>
+        <a class="lore-dd-item" data-lore="spells"   href="spells.html">Spells</a>
+        <a class="lore-dd-item" data-lore="subjects" href="subjects.html">Subjects</a>
+      </div>
+    </li>
+    <li><a class="nav-tab" data-page="discord"   href="discord.html">Discord</a></li>
+    <li><a class="nav-tab" data-page="staff"     href="staff.html">Staff</a></li>
+    <li><a class="nav-tab" data-page="disclaimer" href="disclaimer.html">Disclaimer</a></li>
+  </ul>
+  <button class="nav-ip" onclick="copyIP()">
+    <span class="nav-ip-addr">mc.hogarth.net</span>
+    <span class="nav-ip-hover">Click to Copy</span>
+  </button>
+</nav>

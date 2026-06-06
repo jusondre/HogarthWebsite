@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subjects — Hogarth MC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Cormorant+SC:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+main{max-width:1100px;margin:0 auto;padding:3.5rem clamp(1.5rem,5vw,3rem);}
+.subjects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(26,19,10,.12);border:1px solid rgba(26,19,10,.12);}
+.subject-card{background:var(--paper2);padding:2rem 1.8rem;transition:background .3s;position:relative;}
+.subject-card:hover{background:rgba(227,212,191,.85);}
+.subject-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .4s ease;}
+.subject-card:hover::before{transform:scaleX(1);}
+.subject-icon{font-size:1.3rem;display:block;margin-bottom:.65rem;opacity:.65;}
+.subject-name{font-family:'Cormorant Garamond',serif;font-size:1.08rem;font-weight:400;color:var(--ink);margin-bottom:.45rem;}
+.subject-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:.9rem;color:var(--ink3);line-height:1.95;margin-bottom:.8rem;}
+.subject-year{font-family:'Cormorant SC',serif;font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--ink5);}
+@media(max-width:800px){.subjects-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:520px){.subjects-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+<main>
+  <div class="eyebrow">The Academic Curriculum</div>
+  <h1 class="section-title" style="margin-bottom:2.8rem;">Subjects <em>taught</em> at Hogarth</h1>
+  <div class="subjects-grid">
+    <div class="subject-card"><div class="subject-icon">🧪</div><div class="subject-name">Potions</div><div class="subject-desc">The art and science of brewing. Students learn to combine magical ingredients with precision — a wrongly measured ingredient can be as dangerous as any curse.</div><div class="subject-year">Years I–VII</div></div>
+    <div class="subject-card"><div class="subject-icon">⭐</div><div class="subject-name">Transfiguration</div><div class="subject-desc">Among the most complex branches of magic. Students learn to alter the form, nature, and very essence of objects — and eventually living creatures.</div><div class="subject-year">Years I–VII</div></div>
+    <div class="subject-card"><div class="subject-icon">🌿</div><div class="subject-name">Herbology</div><div class="subject-desc">The study of magical plants, fungi, and their properties. Many healing remedies and potion ingredients begin in the greenhouses of Hogarth.</div><div class="subject-year">Years I–VII</div></div>
+    <div class="subject-card"><div class="subject-icon">🔮</div><div class="subject-name">Divination</div><div class="subject-desc">The imprecise art of reading the future through tea leaves, crystal balls, and dream interpretation. Widely debated — but occasionally, unnervingly accurate.</div><div class="subject-year">Years III–VII</div></div>
+    <div class="subject-card"><div class="subject-icon">🌑</div><div class="subject-name">Defence Against the Dark Arts</div><div class="subject-desc">Practical training in countercurses, protective spells, and the identification of dangerous creatures and dark enchantments. A matter of survival.</div><div class="subject-year">Years I–VII</div></div>
+    <div class="subject-card"><div class="subject-icon">🦎</div><div class="subject-name">Care of Magical Creatures</div><div class="subject-desc">Students encounter, handle, and study the beasts of the magical world — from docile Nifflers to creatures whose temperaments demand great respect.</div><div class="subject-year">Years III–VII</div></div>
+    <div class="subject-card"><div class="subject-icon">✨</div><div class="subject-name">Charms</div><div class="subject-desc">The foundations of practical magic. Students master wand technique, incantation, and the precise application of magical will.</div><div class="subject-year">Years I–VII</div></div>
+    <div class="subject-card"><div class="subject-icon">🌙</div><div class="subject-name">Astronomy</div><div class="subject-desc">Observation of the night sky and its influence upon magical practice. Conducted from the castle's highest tower, often in the cold hours before dawn.</div><div class="subject-year">Years I–V</div></div>
+    <div class="subject-card"><div class="subject-icon">📜</div><div class="subject-name">History of Magic</div><div class="subject-desc">A record of the magical world's great conflicts, founding figures, and pivotal events. Dry in delivery — but those who study it find its secrets run deep.</div><div class="subject-year">Years I–V</div></div>
+  </div>
+</main>
+<div class="toast" id="toast"><strong id="tt"></strong><p id="tm"></p></div>
+<script src="shared.js"></script>
+<script src="nav-loader.js"></script>
+</body>
+</html>

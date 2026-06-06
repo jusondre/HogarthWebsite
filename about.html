@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Hogarth — Hogarth MC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Cormorant+SC:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+body{background:var(--paper);}
+main{max-width:900px;margin:0 auto;padding:3.5rem clamp(1.5rem,5vw,3rem);}
+
+/* eyebrow + title */
+.about-eye{font-family:'Cormorant SC',serif;font-size:.55rem;letter-spacing:.55em;text-transform:uppercase;color:var(--ink5);margin-bottom:.8rem;}
+.about-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.2rem,5vw,3.4rem);color:var(--ink);line-height:1.05;margin-bottom:2.8rem;}
+.about-title em{font-style:italic;}
+
+/* prose */
+.about-body p{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:1.08rem;color:var(--ink2);line-height:2.15;
+  margin-bottom:1.6rem;
+}
+.about-body p strong{font-weight:500;color:var(--ink);font-style:normal;}
+.about-body p em{font-style:italic;}
+
+/* pull quote */
+.pull-quote{
+  margin:2.8rem 0;
+  padding:1.6rem 2.2rem;
+  border-left:3px solid var(--ink4);
+  background:rgba(26,19,10,.03);
+}
+.pull-quote blockquote{
+  font-family:'IM Fell English',serif;font-style:italic;
+  font-size:clamp(1.1rem,2.2vw,1.4rem);color:var(--ink);line-height:1.85;
+  margin-bottom:.7rem;
+}
+.pull-quote cite{
+  font-family:'Cormorant SC',serif;font-size:.5rem;letter-spacing:.42em;
+  text-transform:uppercase;color:var(--ink5);
+}
+
+/* section divider */
+.about-rule{display:flex;align-items:center;gap:1.2rem;margin:2.8rem 0;}
+.about-rule-line{flex:1;height:1px;background:rgba(26,19,10,.12);}
+.about-rule-dot{width:3px;height:3px;border-radius:50%;background:rgba(26,19,10,.25);}
+.about-rule-label{font-family:'Cormorant SC',serif;font-size:.52rem;letter-spacing:.48em;text-transform:uppercase;color:var(--ink5);white-space:nowrap;}
+
+/* HOUSES */
+.houses-section{margin-top:3.2rem;}
+.houses-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:1.6rem;color:var(--ink);margin-bottom:1.6rem;}
+.houses-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+
+.house-card{
+  display:flex;align-items:flex-start;gap:1.2rem;
+  padding:1.4rem 1.6rem;
+  border:1px solid rgba(26,19,10,.12);
+  background:rgba(245,237,224,.6);
+  transition:background .25s,border-color .25s;
+  position:relative;overflow:hidden;
+}
+.house-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  transform:scaleX(0);transform-origin:left;transition:transform .4s ease;
+}
+.house-card:hover{background:rgba(227,212,191,.85);}
+.house-card:hover::before{transform:scaleX(1);}
+
+/* per-house accent colours */
+.house-card.ravenclaw::before{background:#2c4a8a;}
+.house-card.gryffindor::before{background:#8a1f1f;}
+.house-card.slytherin::before{background:#1a5c35;}
+.house-card.hufflepuff::before{background:#8a6e1a;}
+
+.house-icon{font-size:2rem;flex-shrink:0;line-height:1;margin-top:.1rem;}
+.house-info{}
+.house-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500;color:var(--ink);margin-bottom:.25rem;}
+.house-trait{font-family:'Cormorant SC',serif;font-size:.52rem;letter-spacing:.38em;text-transform:uppercase;color:var(--ink5);margin-bottom:.5rem;}
+.house-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:.9rem;color:var(--ink3);line-height:1.85;}
+
+@media(max-width:640px){
+  .houses-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+<main>
+  <div class="about-eye">The Chronicles of Hogarth</div>
+  <h1 class="about-title">A world <em>ancient</em><br>beyond memory</h1>
+
+  <div class="about-body">
+    <p>
+      <strong>Hogarth Academy of Witchcraft &amp; Wizardry</strong> is set within the Magickal World of
+      <strong>1955</strong> — a realm built by <strong>Cxyb3ria</strong> and <strong>Ondre</strong>,
+      born from years of shared imagination. What began as a Discord roleplay is now growing into a full
+      Minecraft experience, carrying with it a world of original characters, history, lore, and spells
+      crafted entirely by its founders.
+    </p>
+    <p>
+      The castle itself predates the written record of magical Britain. Its towers have borne witness to
+      duels, discoveries, and disasters alike. Hogarth's walls are not merely stone — they are
+      <em>memory</em>. Every corridor holds an echo. Every portrait holds a judgment. To walk these halls
+      is to become part of something older than any house, older than any rivalry.
+    </p>
+
+    <div class="pull-quote">
+      <blockquote>"Courage is not the absence of fear — it is what you carry into the darkness alongside it."</blockquote>
+      <cite>— From the Founding Charter of Hogarth</cite>
+    </div>
+
+    <div class="about-rule">
+      <div class="about-rule-line"></div>
+      <span class="about-rule-label">The World of 1955</span>
+      <div class="about-rule-line"></div>
+      <div class="about-rule-dot"></div>
+    </div>
+
+    <p>
+      The year is 1955. A decade has passed since the end of the Great War, but peace in the wizarding world
+      remains fragile — a thin parchment stretched over a wound that never fully closed. In the shadows
+      of post-war Britain, <strong>dark magic is rising again</strong>. Covens long thought scattered have
+      reformed. Ancient curses, sealed away in the restricted archives of the Ministry, have begun
+      reappearing in places they have no right to be. The Trio of Maleficium — the three
+      Unforgivable Curses — are being practiced openly in certain circles, whispered about in others.
+    </p>
+    <p>
+      The victims are not only wizarding folk. <em>Muggles are dying.</em> Bodies found drained of life
+      with no Muggle explanation — no wound, no illness, no reason the non-magical world can name. The
+      Ministry of Magic is stretched thin, its Aurors running ragged, its public statements growing
+      increasingly unconvincing. Something moves in the margins of the world, and it is not subtle.
+    </p>
+    <p>
+      But the danger does not flow in only one direction. The Muggle world, scarred by its own war and
+      gripped by post-war suspicion, has begun to <strong>hunt back</strong>. Reports from across
+      the continent speak of organised Muggle groups — men who have seen too much, who cannot explain
+      what they have witnessed and have chosen fear over reason. Wizarding families have gone missing.
+      Communities have had to relocate overnight. The Statute of Secrecy grows more difficult to uphold
+      with each passing month. Some within the Ministry argue that it was never designed for a world
+      this fractured.
+    </p>
+    <p>
+      Into this atmosphere of tension and buried dread, a new generation of students arrives at
+      Hogarth. Most come knowing nothing of what stirs beyond the castle walls. The professors teach
+      their lessons. The houses compete for the cup. Life, on the surface, continues as it always has.
+      But the castle remembers every war that has come before — and it is <em>watching</em>.
+    </p>
+  </div>
+
+  <!-- HOUSES -->
+  <div class="about-rule">
+    <div class="about-rule-line"></div>
+    <span class="about-rule-label">The Four Houses</span>
+    <div class="about-rule-line"></div>
+    <div class="about-rule-dot"></div>
+  </div>
+
+  <div class="houses-section">
+    <p class="about-body" style="margin-bottom:1.8rem;">
+      <span style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.05rem;color:var(--ink3);line-height:2.1;">
+        Four great houses have vied for honour within these walls for generations. The sorting has never been wrong.
+        Allegiances forged here last lifetimes.
+      </span>
+    </p>
+    <div class="houses-grid">
+      <div class="house-card ravenclaw">
+        <div class="house-icon">🦅</div>
+        <div class="house-info">
+          <div class="house-name">Ravenclaw</div>
+          <div class="house-trait">Wit &amp; Wisdom</div>
+          <div class="house-desc">Those who seek knowledge above all else find their home beneath the eagle's wing. Ravenclaws ask questions that make professors uncomfortable — and answer them anyway.</div>
+        </div>
+      </div>
+      <div class="house-card gryffindor">
+        <div class="house-icon">🦁</div>
+        <div class="house-info">
+          <div class="house-name">Gryffindor</div>
+          <div class="house-trait">Bravery &amp; Nerve</div>
+          <div class="house-desc">The lion's house has always attracted those who act before they think — and somehow come out the other side. In 1955, Gryffindor's halls are quieter than usual. Several alumni have not returned from Ministry duties.</div>
+        </div>
+      </div>
+      <div class="house-card slytherin">
+        <div class="house-icon">🐍</div>
+        <div class="house-info">
+          <div class="house-name">Slytherin</div>
+          <div class="house-trait">Ambition &amp; Cunning</div>
+          <div class="house-desc">Slytherin has always been misread. The serpent's house produces not villains, but survivors — those who understand that the world requires strategy as much as courage. In troubled times, Slytherins endure.</div>
+        </div>
+      </div>
+      <div class="house-card hufflepuff">
+        <div class="house-icon">🦡</div>
+        <div class="house-info">
+          <div class="house-name">Hufflepuff</div>
+          <div class="house-trait">Loyalty &amp; Patience</div>
+          <div class="house-desc">Underestimated. Always underestimated. Hufflepuffs do not seek glory — but when the castle has needed protecting most, it has been the badger's students who stood at the door and did not move.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"><strong id="tt"></strong><p id="tm"></p></div>
+<script src="shared.js"></script>
+<script src="nav-loader.js"></script>
+</body>
+</html>

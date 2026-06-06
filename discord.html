@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discord — Hogarth MC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Cormorant+SC:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+main.centered{min-height:calc(100vh - 62px);}
+.dc-t{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(1.8rem,4.5vw,3rem);color:var(--ink);margin-bottom:.4em;}
+.dc-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:1.05rem;color:var(--ink3);max-width:420px;margin:0 auto 2.6rem;line-height:1.95;}
+.dc-cards{display:flex;gap:1px;max-width:660px;width:100%;background:rgba(26,19,10,.12);border:1px solid rgba(26,19,10,.12);margin-bottom:2.4rem;}
+.dc-card{flex:1;background:var(--paper2);padding:1.8rem 1.4rem;transition:background .3s;text-align:center;}
+.dc-card:hover{background:rgba(227,212,191,.75);}
+.dc-i{font-size:1.5rem;display:block;margin-bottom:.7rem;opacity:.65;}
+.dc-nt{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;color:var(--ink);margin-bottom:.3rem;}
+.dc-nd{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;color:var(--ink4);line-height:1.65;}
+@media(max-width:560px){.dc-cards{flex-direction:column;}}
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+<main class="centered">
+  <h2 class="dc-t">The Common Room</h2>
+  <p class="dc-sub">Our Discord is where the school lives between sessions — announcements, house points, events, and the occasional late-night theory about the third-floor corridor.</p>
+  <div class="dc-cards">
+    <div class="dc-card"><span class="dc-i">📣</span><div class="dc-nt">Announcements</div><div class="dc-nd">Server news, season starts and event dates.</div></div>
+    <div class="dc-card"><span class="dc-i">🏆</span><div class="dc-nt">House Points</div><div class="dc-nd">Live cup standings and weekly competitions.</div></div>
+    <div class="dc-card"><span class="dc-i">📜</span><div class="dc-nt">Rules &amp; Lore</div><div class="dc-nd">Server guidelines and the founding history.</div></div>
+  </div>
+  <button class="btn-s" onclick="showToast('Discord','discord.gg/hogarth — see you inside.')">Join the Discord</button>
+</main>
+<div class="toast" id="toast"><strong id="tt"></strong><p id="tm"></p></div>
+<script src="shared.js"></script>
+<script src="nav-loader.js"></script>
+</body>
+</html>
