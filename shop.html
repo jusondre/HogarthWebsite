@@ -8,35 +8,759 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Cormorant+SC:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
-main.centered{min-height:calc(100vh - 62px);}
-.shop-t{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(1.8rem,4.5vw,3rem);color:var(--ink);margin-bottom:.4em;}
-.shop-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:1rem;color:var(--ink4);max-width:360px;margin:0 auto 2.8rem;line-height:1.9;}
-.shop-tiles{display:flex;gap:1px;max-width:660px;width:100%;background:rgba(26,19,10,.12);border:1px solid rgba(26,19,10,.12);}
-.s-tile{flex:1;background:var(--paper2);padding:1.8rem 1.4rem;transition:background .3s;text-align:center;}
-.s-tile:hover{background:rgba(227,212,191,.85);}
-.s-tile-i{font-size:1.5rem;display:block;margin-bottom:.7rem;opacity:.65;}
-.s-tile-n{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;color:var(--ink);margin-bottom:.3rem;}
-.s-tile-d{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.82rem;color:var(--ink4);line-height:1.6;}
-.shop-note{margin-top:1.8rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:var(--ink4);}
-.shop-note a{color:var(--ink3);text-decoration:underline;text-underline-offset:3px;transition:color .2s;cursor:pointer;}
-.shop-note a:hover{color:var(--ink);}
-@media(max-width:600px){.shop-tiles{flex-direction:column;}}
+  :root {
+    --gold:  #b8943f;
+    --gold2: #d4aa5a;
+    --gold3: #f0cc7a;
+    --rule:  rgba(26,19,10,0.15);
+    --vip-accent:  #7a9e7e;
+    --vipp-accent: #4a7fa5;
+    --mvp-accent:  #9e6b3a;
+  }
+
+  /* ── Page ── */
+  body { cursor: default; }
+
+  /* ── Hero ── */
+  .em-hero {
+    text-align: center;
+    padding: 3.5rem 1rem 2rem;
+    position: relative;
+  }
+  .em-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 2.5rem;
+    background: linear-gradient(to bottom, transparent, var(--gold));
+    opacity: 0.5;
+  }
+  .em-kicker {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 1.1rem;
+    animation: emFade 0.6s ease both;
+  }
+  .em-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 0.6rem;
+    animation: emFade 0.7s 0.1s ease both;
+  }
+  .em-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1rem;
+    color: var(--ink4);
+    max-width: 400px;
+    margin: 0 auto 0;
+    line-height: 1.9;
+    animation: emFade 0.7s 0.2s ease both;
+  }
+  .em-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.6rem auto 2.4rem;
+    max-width: 480px;
+    animation: emFade 0.7s 0.3s ease both;
+  }
+  .em-divider::before, .em-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    opacity: 0.5;
+  }
+  .em-divider span {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.5rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  /* ── Tab bar ── */
+  .em-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 3rem;
+    animation: emFade 0.7s 0.35s ease both;
+    flex-wrap: wrap;
+  }
+  .em-tab {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink4);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.75rem 1.4rem;
+    position: relative;
+    transition: color 0.2s;
+  }
+  .em-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 2px;
+    background: var(--ink);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+  .em-tab:hover { color: var(--ink); }
+  .em-tab.active { color: var(--ink); }
+  .em-tab.active::after { transform: scaleX(1); }
+
+  /* ── Sections ── */
+  .em-section { display: none; }
+  .em-section.active { display: block; }
+
+  /* ── Section intro ── */
+  .em-section-head {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .em-section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .em-section-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--ink4);
+    line-height: 1.9;
+  }
+
+  /* ── RANKS ── */
+  .em-ranks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .rank-card {
+    border: 1px solid var(--rule);
+    background: rgba(245,237,224,0.5);
+    padding: 2rem 1.6rem 1.8rem;
+    text-align: center;
+    position: relative;
+    transition: background 0.3s, border-color 0.3s, transform 0.25s;
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  .rank-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .rank-card:hover {
+    background: rgba(232,220,200,0.75);
+    transform: translateY(-3px);
+  }
+
+  /* Featured card */
+  .rank-card.featured {
+    border-color: var(--gold);
+    background: rgba(240,230,210,0.7);
+  }
+  .rank-card.featured::before {
+    content: 'Most Popular';
+    position: absolute;
+    top: -1px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.48rem;
+    letter-spacing: 0.25em;
+    background: var(--gold);
+    color: #fff;
+    padding: 0.25rem 0.9rem;
+    white-space: nowrap;
+  }
+
+  .rank-sigil {
+    font-size: 1.8rem;
+    display: block;
+    margin-bottom: 0.8rem;
+    line-height: 1;
+  }
+  .rank-name {
+    font-family: 'Cormorant SC', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+  .rank-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 0.2rem;
+    display: block;
+  }
+  .rank-price-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.78rem;
+    color: var(--ink4);
+    margin-bottom: 1.4rem;
+    display: block;
+  }
+  .rank-perks {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.6rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 1.2rem;
+    text-align: left;
+  }
+  .rank-perks li {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--ink3);
+    line-height: 1.8;
+    padding-left: 1rem;
+    position: relative;
+  }
+  .rank-perks li::before {
+    content: '✦';
+    position: absolute;
+    left: 0;
+    font-size: 0.5rem;
+    top: 0.35rem;
+    color: var(--gold);
+  }
+  .rank-btn {
+    width: 100%;
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.56rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: none;
+    border: 1px solid rgba(26,19,10,0.3);
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .rank-btn:hover {
+    background: var(--ink);
+    color: var(--parch, #f5eddf);
+  }
+  .rank-card.featured .rank-btn {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #fff;
+  }
+  .rank-card.featured .rank-btn:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  /* ── COSMETICS ── */
+  .em-cosmetics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .cos-item {
+    background: rgba(245,237,224,0.5);
+    padding: 1.8rem 1.4rem;
+    text-align: center;
+    transition: background 0.25s, transform 0.25s;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(14px);
+    position: relative;
+  }
+  .cos-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .cos-item:hover {
+    background: rgba(232,220,200,0.85);
+    z-index: 1;
+  }
+  .cos-badge {
+    position: absolute;
+    top: 0.7rem; right: 0.7rem;
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.44rem;
+    letter-spacing: 0.2em;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid currentColor;
+  }
+  .cos-badge.new   { color: var(--vip-accent); }
+  .cos-badge.rare  { color: var(--gold); }
+  .cos-badge.limit { color: #9e3a3a; }
+
+  .cos-icon {
+    font-size: 1.6rem;
+    display: block;
+    margin-bottom: 0.8rem;
+    line-height: 1;
+  }
+  .cos-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .cos-flavor {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--ink4);
+    line-height: 1.65;
+    display: block;
+    margin-bottom: 0.9rem;
+    min-height: 2.6rem;
+  }
+  .cos-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    color: var(--ink);
+    display: block;
+  }
+
+  /* ── FAMILIARS ── */
+  .em-familiars {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1.2rem;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  .fam-card {
+    border: 1px solid var(--rule);
+    background: rgba(245,237,224,0.5);
+    padding: 2rem 1.5rem 1.6rem;
+    text-align: center;
+    position: relative;
+    transition: background 0.3s, transform 0.25s;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  .fam-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fam-card:hover {
+    background: rgba(232,220,200,0.8);
+    transform: translateY(-3px);
+  }
+  .fam-rarity {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .fam-rarity.common    { background: var(--vip-accent); }
+  .fam-rarity.rare      { background: var(--vipp-accent); }
+  .fam-rarity.legendary { background: linear-gradient(to right, var(--gold), var(--gold3), var(--gold)); }
+
+  .fam-creature {
+    font-size: 2.2rem;
+    display: block;
+    margin-bottom: 0.6rem;
+    line-height: 1;
+  }
+  .fam-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .fam-species {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+  .fam-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.88rem;
+    color: var(--ink3);
+    line-height: 1.85;
+    margin-bottom: 1.2rem;
+    min-height: 3.8rem;
+  }
+  .fam-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--rule);
+    padding-top: 1rem;
+  }
+  .fam-rarity-label {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.48rem;
+    letter-spacing: 0.22em;
+    color: var(--ink4);
+  }
+  .fam-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+
+  /* ── Footer note ── */
+  .em-footer-note {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 1.8rem;
+    border-top: 1px solid var(--rule);
+  }
+  .em-footer-note p {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--ink4);
+    line-height: 1.9;
+  }
+  .em-footer-note a {
+    color: var(--ink3);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .em-footer-note a:hover { color: var(--ink); }
+
+  /* ── Transitions ── */
+  .rank-card, .cos-item, .fam-card {
+    transition: opacity 0.5s ease, transform 0.5s ease, background 0.25s;
+  }
+  .rank-card:nth-child(2) { transition-delay: 0.08s; }
+  .rank-card:nth-child(3) { transition-delay: 0.16s; }
+
+  @keyframes emFade {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .em-ranks { grid-template-columns: 1fr; }
+    .em-tab { padding: 0.65rem 1rem; }
+  }
 </style>
 </head>
 <body>
 <div id="nav-mount"></div>
-<main class="centered">
-  <h2 class="shop-t">The Grand Emporium</h2>
-  <p class="shop-sub">The shop is having its final enchantments applied. Return when the candles are lit.</p>
-  <div class="shop-tiles">
-    <div class="s-tile"><span class="s-tile-i">⚔️</span><div class="s-tile-n">Ranks</div><div class="s-tile-d">Prefect · Seeker · Auror · Archmage</div></div>
-    <div class="s-tile"><span class="s-tile-i">✨</span><div class="s-tile-n">Cosmetics</div><div class="s-tile-d">Trails, cloaks &amp; artefacts</div></div>
-    <div class="s-tile"><span class="s-tile-i">🦉</span><div class="s-tile-n">Familiars</div><div class="s-tile-d">Loyal companions await</div></div>
+
+<main>
+
+  <!-- ── Hero ── -->
+  <div class="em-hero">
+    <span class="em-kicker">Hogarth &nbsp;·&nbsp; The Grand Emporium</span>
+    <h2 class="em-title">The Grand Emporium</h2>
+    <p class="em-sub">Rare artefacts, loyal familiars, and titles of great distinction — all awaiting a worthy owner.</p>
+    <div class="em-divider"><span>Est. in the age of magic</span></div>
   </div>
-  <p class="shop-note"><a onclick="showToast('Noted','We\'ll let you know when the shop opens.')">Notify me when the shop opens →</a></p>
+
+  <!-- ── Tab navigation ── -->
+  <div class="em-tabs">
+    <button class="em-tab active" onclick="showTab('ranks',this)">Ranks</button>
+    <button class="em-tab" onclick="showTab('cosmetics',this)">Cosmetics</button>
+    <button class="em-tab" onclick="showTab('familiars',this)">Familiars</button>
+  </div>
+
+  <!-- ══════════════════════════════
+       RANKS
+  ═══════════════════════════════ -->
+  <div class="em-section active" id="sec-ranks">
+    <div class="em-section-head">
+      <div class="em-section-title">Titles of Distinction</div>
+      <p class="em-section-note">Ranks are permanent. Once bestowed, your title endures for the lifetime of your character.</p>
+    </div>
+
+    <div class="em-ranks">
+
+      <div class="rank-card" id="rc0">
+        <span class="rank-sigil">🌿</span>
+        <span class="rank-name">VIP</span>
+        <span class="rank-price">£4.99</span>
+        <span class="rank-price-note">one-time · permanent</span>
+        <ul class="rank-perks">
+          <li>Emerald [VIP] prefix in chat</li>
+          <li>Access to /fly in your own plot</li>
+          <li>3 additional player warps</li>
+          <li>Coloured chat name</li>
+          <li>Reserved queue slot</li>
+          <li>Exclusive VIP common room channel</li>
+        </ul>
+        <button class="rank-btn" onclick="showToast('VIP','Opening the shop checkout — coming soon.')">Purchase VIP →</button>
+      </div>
+
+      <div class="rank-card featured" id="rc1">
+        <span class="rank-sigil">⚡</span>
+        <span class="rank-name">VIP+</span>
+        <span class="rank-price">£9.99</span>
+        <span class="rank-price-note">one-time · permanent</span>
+        <ul class="rank-perks">
+          <li>Sapphire [VIP+] prefix in chat</li>
+          <li>Everything in VIP</li>
+          <li>/fly anywhere on the server</li>
+          <li>5 additional player warps</li>
+          <li>Access to exclusive cosmetic trail</li>
+          <li>Priority support from staff</li>
+          <li>Double plot claim limit</li>
+        </ul>
+        <button class="rank-btn" onclick="showToast('VIP+','Opening the shop checkout — coming soon.')">Purchase VIP+ →</button>
+      </div>
+
+      <div class="rank-card" id="rc2">
+        <span class="rank-sigil">👑</span>
+        <span class="rank-name">MVP</span>
+        <span class="rank-price">£19.99</span>
+        <span class="rank-price-note">one-time · permanent</span>
+        <ul class="rank-perks">
+          <li>Gold [MVP] prefix in chat</li>
+          <li>Everything in VIP+</li>
+          <li>Custom join &amp; leave messages</li>
+          <li>Animated name colour in chat</li>
+          <li>Exclusive MVP familiar companion</li>
+          <li>One free cosmetic of choice</li>
+          <li>Name on the Hall of Patrons</li>
+          <li>Lifetime access to new rank perks</li>
+        </ul>
+        <button class="rank-btn" onclick="showToast('MVP','Opening the shop checkout — coming soon.')">Purchase MVP →</button>
+      </div>
+
+    </div>
+
+    <div class="em-footer-note">
+      <p>All purchases support the continued life of Hogarth. Thank you for keeping the candles lit.<br>
+      Questions? <a onclick="showToast('Support','Visit our Discord for billing queries.')">Speak to a staff member →</a></p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       COSMETICS
+  ═══════════════════════════════ -->
+  <div class="em-section" id="sec-cosmetics">
+    <div class="em-section-head">
+      <div class="em-section-title">Artefacts &amp; Adornments</div>
+      <p class="em-section-note">Purely cosmetic. Your skill determines your fate — your style merely announces your arrival.</p>
+    </div>
+
+    <div class="em-cosmetics-grid">
+
+      <div class="cos-item" id="ci0">
+        <span class="cos-badge new">New</span>
+        <span class="cos-icon">✨</span>
+        <span class="cos-name">Starfall Trail</span>
+        <span class="cos-flavor">Golden embers drift behind your every step, as though you walk through a constellation.</span>
+        <span class="cos-price">£2.49</span>
+      </div>
+
+      <div class="cos-item" id="ci1">
+        <span class="cos-badge rare">Rare</span>
+        <span class="cos-icon">🌙</span>
+        <span class="cos-name">Moonveil Trail</span>
+        <span class="cos-flavor">Silver wisps coil around your feet like mist on still water at midnight.</span>
+        <span class="cos-price">£3.49</span>
+      </div>
+
+      <div class="cos-item" id="ci2">
+        <span class="cos-badge limit">Limited</span>
+        <span class="cos-icon">🔥</span>
+        <span class="cos-name">Fiendfyre Trail</span>
+        <span class="cos-flavor">Crimson flames dance in your wake. Do not look back — it follows of its own accord.</span>
+        <span class="cos-price">£4.99</span>
+      </div>
+
+      <div class="cos-item" id="ci3">
+        <span class="cos-icon">🪄</span>
+        <span class="cos-name">Elderwood Handle</span>
+        <span class="cos-flavor">A wand grip carved from ancient wood. Worn smooth by centuries of spellwork.</span>
+        <span class="cos-price">£1.99</span>
+      </div>
+
+      <div class="cos-item" id="ci4">
+        <span class="cos-badge rare">Rare</span>
+        <span class="cos-icon">🦴</span>
+        <span class="cos-name">Dragon Bone Handle</span>
+        <span class="cos-flavor">Ivory-white and faintly warm to the touch. The dragon it came from is best not named.</span>
+        <span class="cos-price">£3.99</span>
+      </div>
+
+      <div class="cos-item" id="ci5">
+        <span class="cos-badge new">New</span>
+        <span class="cos-icon">🌿</span>
+        <span class="cos-name">Enchanted Cloak</span>
+        <span class="cos-flavor">A shimmering outer garment that shifts colour with the light. Looks expensive because it is.</span>
+        <span class="cos-price">£2.99</span>
+      </div>
+
+      <div class="cos-item" id="ci6">
+        <span class="cos-icon">💫</span>
+        <span class="cos-name">Lumos Aura</span>
+        <span class="cos-flavor">A soft golden glow surrounds you at all times. Part charm. Part vanity. Entirely worth it.</span>
+        <span class="cos-price">£2.49</span>
+      </div>
+
+      <div class="cos-item" id="ci7">
+        <span class="cos-badge limit">Limited</span>
+        <span class="cos-icon">🌊</span>
+        <span class="cos-name">Tidal Cloak</span>
+        <span class="cos-flavor">Deep blue fabric that ripples as though submerged. Only twelve were ever sewn.</span>
+        <span class="cos-price">£5.99</span>
+      </div>
+
+    </div>
+
+    <div class="em-footer-note">
+      <p>Limited items will not return once sold. <a onclick="showToast('Notify','We\'ll alert you when new cosmetics arrive.')">Notify me of new arrivals →</a></p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       FAMILIARS
+  ═══════════════════════════════ -->
+  <div class="em-section" id="sec-familiars">
+    <div class="em-section-head">
+      <div class="em-section-title">Loyal Companions</div>
+      <p class="em-section-note">A familiar chooses its keeper as much as it is chosen. Treat them well.</p>
+    </div>
+
+    <div class="em-familiars">
+
+      <div class="fam-card" id="fi0">
+        <div class="fam-rarity common"></div>
+        <span class="fam-creature">🦉</span>
+        <span class="fam-name">Archimedes</span>
+        <span class="fam-species">Tawny Owl</span>
+        <div class="fam-desc">A dependable companion with amber eyes that miss nothing. Delivers scrolls, keeps secrets, and judges you silently from the rafters.</div>
+        <div class="fam-footer">
+          <span class="fam-rarity-label">Common</span>
+          <span class="fam-price">£3.99</span>
+        </div>
+      </div>
+
+      <div class="fam-card" id="fi1">
+        <div class="fam-rarity common"></div>
+        <span class="fam-creature">🐈</span>
+        <span class="fam-name">Crookshanks</span>
+        <span class="fam-species">Half-Kneazle</span>
+        <div class="fam-desc">Unusually intelligent for a cat — which is saying something. Can sense concealment charms and will sit precisely on whatever you are trying to read.</div>
+        <div class="fam-footer">
+          <span class="fam-rarity-label">Common</span>
+          <span class="fam-price">£3.99</span>
+        </div>
+      </div>
+
+      <div class="fam-card" id="fi2">
+        <div class="fam-rarity rare"></div>
+        <span class="fam-creature">🦎</span>
+        <span class="fam-name">Cinder</span>
+        <span class="fam-species">Fire Salamander</span>
+        <div class="fam-desc">Born in the heart of a bonfire on Midsummer's Eve. Leaves warm footprints on stone floors and smells faintly of woodsmoke wherever it goes.</div>
+        <div class="fam-footer">
+          <span class="fam-rarity-label">Rare</span>
+          <span class="fam-price">£6.99</span>
+        </div>
+      </div>
+
+      <div class="fam-card" id="fi3">
+        <div class="fam-rarity rare"></div>
+        <span class="fam-creature">🦊</span>
+        <span class="fam-name">Vesper</span>
+        <span class="fam-species">Enchanted Fox</span>
+        <div class="fam-desc">A fox with knowing eyes and a tail that glows faintly at dusk. Fiercely loyal to one keeper, and entirely indifferent to all others.</div>
+        <div class="fam-footer">
+          <span class="fam-rarity-label">Rare</span>
+          <span class="fam-price">£6.99</span>
+        </div>
+      </div>
+
+      <div class="fam-card" id="fi4">
+        <div class="fam-rarity legendary"></div>
+        <span class="fam-creature">🦚</span>
+        <span class="fam-name">Solarius</span>
+        <span class="fam-species">Young Thunderbird</span>
+        <div class="fam-desc">A creature of American magical legend, said to create storms as it flies. Its tail feathers carry traces of lightning. Only for those who can be trusted with the extraordinary.</div>
+        <div class="fam-footer">
+          <span class="fam-rarity-label">Legendary</span>
+          <span class="fam-price">£14.99</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="em-footer-note">
+      <p>Familiars are purely cosmetic companions. They will follow you through the castle but cannot be lost in battle.<br>
+      <a onclick="showToast('Noted','We\'ll let you know when new familiars are discovered.')">Notify me when new familiars arrive →</a></p>
+    </div>
+  </div>
+
 </main>
+
 <div class="toast" id="toast"><strong id="tt"></strong><p id="tm"></p></div>
 <script src="shared.js"></script>
 <script src="nav-loader.js"></script>
+<script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.em-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.em-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('sec-' + id).classList.add('active');
+    btn.classList.add('active');
+    // Re-trigger reveal for newly shown section
+    setTimeout(revealVisible, 30);
+  }
+
+  function revealVisible() {
+    document.querySelectorAll('.rank-card, .cos-item, .fam-card').forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.95) el.classList.add('visible');
+    });
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.rank-card, .cos-item, .fam-card').forEach(el => observer.observe(el));
+
+  setTimeout(revealVisible, 60);
+</script>
 </body>
 </html>

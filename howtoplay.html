@@ -5,97 +5,419 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>How to Play — Hogarth MC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Cormorant+SC:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cormorant+SC:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
-.htp-head{text-align:center;margin-bottom:3rem;}
-.htp-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(1.7rem,3.8vw,2.6rem);color:var(--ink);margin-bottom:.35rem;}
-.htp-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:1rem;color:var(--ink4);}
+  :root {
+    --gold: #b8943f;
+    --gold2: #d4aa5a;
+    --rule: rgba(26,19,10,0.18);
+  }
 
-.steps{display:flex;gap:0;max-width:1100px;margin:0 auto;width:100%;border:1px solid rgba(26,19,10,.15);align-items:stretch;}
-.step{flex:1;padding:2rem 1.8rem;position:relative;background:rgba(245,237,224,.5);transition:background .3s;text-align:left;display:flex;flex-direction:column;}
-.step:hover{background:rgba(227,212,191,.75);}
-.step:not(:last-child){border-right:1px solid rgba(26,19,10,.13);}
-.step::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .4s ease;}
-.step:hover::before{transform:scaleX(1);}
-.step-n{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;font-style:italic;color:rgba(26,19,10,.1);line-height:1;margin-bottom:.7rem;display:block;}
-.step-t{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:400;color:var(--ink);margin-bottom:.55rem;}
-.step-d{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:.92rem;color:var(--ink3);line-height:1.95;flex:1;}
-.step-a{display:inline-flex;align-items:center;gap:.5rem;font-family:'Cormorant SC',serif;font-size:.56rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink4);background:none;border:none;cursor:pointer;padding:0;transition:color .2s;margin-top:1.3rem;text-decoration:none;}
-.step-a:hover{color:var(--ink);}
-.step-a svg{transition:transform .2s;}
-.step-a:hover svg{transform:translateX(3px);}
+  /* ── Header ── */
+  .htp-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    position: relative;
+  }
 
-@media(max-width:900px){
-  .steps{flex-direction:column;}
-  .step:not(:last-child){border-right:none;border-bottom:1px solid rgba(26,19,10,.12);}
-}
+  .htp-stars {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.6em;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    animation: htpFadeUp 0.6s ease both;
+  }
+
+  .htp-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    animation: htpFadeUp 0.7s 0.1s ease both;
+  }
+
+  .htp-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.05rem;
+    color: var(--ink4);
+    animation: htpFadeUp 0.7s 0.2s ease both;
+  }
+
+  .htp-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.6rem;
+    animation: htpFadeUp 0.7s 0.3s ease both;
+  }
+  .htp-divider::before,
+  .htp-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    opacity: 0.55;
+  }
+  .htp-divider span {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── Progress dots ── */
+  .htp-progress {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 3rem;
+    animation: htpFadeUp 0.7s 0.35s ease both;
+  }
+  .htp-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--rule);
+    transition: background 0.3s, transform 0.3s;
+  }
+  .htp-dot.active {
+    background: var(--gold);
+    transform: scale(1.5);
+  }
+
+  /* ── Steps ── */
+  .htp-steps {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .htp-step {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 0 2rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+
+  .htp-step.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .htp-step:first-child { padding-top: 0.25rem; }
+  .htp-step:last-child  { border-bottom: none; }
+
+  /* Stagger delays */
+  .htp-step:nth-child(1) { transition-delay: 0.05s; }
+  .htp-step:nth-child(2) { transition-delay: 0.10s; }
+  .htp-step:nth-child(3) { transition-delay: 0.15s; }
+  .htp-step:nth-child(4) { transition-delay: 0.20s; }
+  .htp-step:nth-child(5) { transition-delay: 0.25s; }
+
+  /* Hover glow */
+  .htp-step-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 15% 50%, rgba(184,148,63,0.06) 0%, transparent 65%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .htp-step:hover .htp-step-bg { opacity: 1; }
+
+  /* Left column */
+  .htp-step-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding-top: 0.1rem;
+  }
+
+  .htp-numeral {
+    font-family: 'IM Fell English', serif;
+    font-size: 2.8rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold2);
+    line-height: 1;
+    opacity: 0.85;
+  }
+
+  .htp-spine {
+    width: 1px;
+    flex: 1;
+    min-height: 60px;
+    background: linear-gradient(to bottom, rgba(184,148,63,0.4), transparent);
+    margin-top: 10px;
+  }
+  .htp-step:last-child .htp-spine { display: none; }
+
+  /* Right column */
+  .htp-step-body {
+    padding-bottom: 0.5rem;
+  }
+
+  .htp-step-tag {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .htp-step-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+    line-height: 1.2;
+  }
+
+  .htp-step-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.98rem;
+    color: var(--ink3);
+    line-height: 2;
+    max-width: 520px;
+  }
+
+  .htp-step-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.1rem;
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.54rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink4);
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+  }
+  .htp-step-cta:hover { color: var(--ink); }
+  .htp-step-cta .htp-arrow { transition: transform 0.2s; }
+  .htp-step-cta:hover .htp-arrow { transform: translateX(4px); }
+
+  /* ── Closing seal ── */
+  .htp-seal {
+    text-align: center;
+    margin-top: 3.5rem;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+  }
+  .htp-seal.visible { opacity: 0.38; }
+
+  .htp-seal-ring {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 1.6rem;
+    color: var(--gold);
+  }
+
+  .htp-seal-label {
+    display: block;
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.48rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-top: 0.7rem;
+  }
+
+  @keyframes htpFadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 540px) {
+    .htp-step {
+      grid-template-columns: 52px 1fr;
+      gap: 0 1.2rem;
+    }
+    .htp-numeral { font-size: 2.1rem; }
+  }
 </style>
 </head>
 <body>
 <div id="nav-mount"></div>
 
 <main>
-  <div class="htp-head">
+
+  <div class="htp-header">
+    <span class="htp-stars">✦ &nbsp; ✦ &nbsp; ✦</span>
     <h2 class="htp-title">How to Begin Your Journey</h2>
     <p class="htp-sub">Five steps stand between you and the castle gates.</p>
+    <div class="htp-divider"><span>Hogarth School of Witchcraft</span></div>
   </div>
 
-  <div class="steps">
-    <div class="step">
-      <span class="step-n">I</span>
-      <div class="step-t">Join the Discord</div>
-      <div class="step-d">Every journey begins here. Join our community, read the rules, and introduce yourself to the castle.</div>
-      <a class="step-a" href="discord.html">
-        <span>Join Discord</span>
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
-      </a>
-    </div>
-
-    <div class="step">
-      <span class="step-n">II</span>
-      <div class="step-t">Create Your Character</div>
-      <div class="step-d">Craft your original witch or wizard. Name, backstory, house preference — this is who you will be within these walls.</div>
-      <a class="step-a" href="about.html">
-        <span>Creating a Character</span>
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
-      </a>
-    </div>
-
-    <div class="step">
-      <span class="step-n">III</span>
-      <div class="step-t">Get Approved</div>
-      <div class="step-d">Submit your character for review. The staff will read your application and grant entry to those who are ready.</div>
-      <a class="step-a" href="staff.html">
-        <span>Meet the Staff</span>
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
-      </a>
-    </div>
-
-    <div class="step">
-      <span class="step-n">IV</span>
-      <div class="step-t">Receive Your Letter</div>
-      <div class="step-d">Once approved, your Hogarth acceptance letter arrives in Discord. Your house is revealed. The castle is expecting you.</div>
-      <button class="step-a" onclick="showToast('Your Letter','Once approved, watch Discord — your Hogarth letter will arrive with your house revealed.')">
-        <span>More About Your Letter</span>
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
-      </button>
-    </div>
-
-    <div class="step">
-      <span class="step-n">V</span>
-      <div class="step-t">Begin Your Journey</div>
-      <div class="step-d">Open Minecraft Java 1.20+, connect to mc.hogarth.net and step through the gates. Your story starts now.</div>
-      <button class="step-a" onclick="copyIP()">
-        <span>mc.hogarth.net</span>
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
-      </button>
-    </div>
+  <div class="htp-progress">
+    <div class="htp-dot active" id="htp-pd0"></div>
+    <div class="htp-dot" id="htp-pd1"></div>
+    <div class="htp-dot" id="htp-pd2"></div>
+    <div class="htp-dot" id="htp-pd3"></div>
+    <div class="htp-dot" id="htp-pd4"></div>
   </div>
+
+  <div class="htp-steps">
+
+    <div class="htp-step" id="htp-s0">
+      <div class="htp-step-bg"></div>
+      <div class="htp-step-left">
+        <span class="htp-numeral">I</span>
+        <div class="htp-spine"></div>
+      </div>
+      <div class="htp-step-body">
+        <span class="htp-step-tag">First Step</span>
+        <div class="htp-step-title">Join the Discord</div>
+        <div class="htp-step-desc">Every journey begins here. Join our community, read the rules, and introduce yourself to the castle. The gates are open to all who seek entry.</div>
+        <a class="htp-step-cta" href="discord.html">
+          Join the Community <span class="htp-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="htp-step" id="htp-s1">
+      <div class="htp-step-bg"></div>
+      <div class="htp-step-left">
+        <span class="htp-numeral">II</span>
+        <div class="htp-spine"></div>
+      </div>
+      <div class="htp-step-body">
+        <span class="htp-step-tag">Second Step</span>
+        <div class="htp-step-title">Create Your Character</div>
+        <div class="htp-step-desc">Craft your original witch or wizard. Choose a name, weave a backstory, and declare your house preference — this is who you will be within these ancient walls.</div>
+        <a class="htp-step-cta" href="about.html">
+          Creating a Character <span class="htp-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="htp-step" id="htp-s2">
+      <div class="htp-step-bg"></div>
+      <div class="htp-step-left">
+        <span class="htp-numeral">III</span>
+        <div class="htp-spine"></div>
+      </div>
+      <div class="htp-step-body">
+        <span class="htp-step-tag">Third Step</span>
+        <div class="htp-step-title">Get Approved</div>
+        <div class="htp-step-desc">Submit your character for review. Our staff will read your application with care, and grant entry to those who are ready to step through the threshold.</div>
+        <a class="htp-step-cta" href="staff.html">
+          Meet the Staff <span class="htp-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="htp-step" id="htp-s3">
+      <div class="htp-step-bg"></div>
+      <div class="htp-step-left">
+        <span class="htp-numeral">IV</span>
+        <div class="htp-spine"></div>
+      </div>
+      <div class="htp-step-body">
+        <span class="htp-step-tag">Fourth Step</span>
+        <div class="htp-step-title">Receive Your Letter</div>
+        <div class="htp-step-desc">Once approved, your Hogarth acceptance letter arrives in Discord. Your house is revealed at last. The castle has been expecting you all along.</div>
+        <button class="htp-step-cta" onclick="showToast('Your Letter','Once approved, watch Discord — your Hogarth letter will arrive with your house revealed.')">
+          About Your Letter <span class="htp-arrow">→</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="htp-step" id="htp-s4">
+      <div class="htp-step-bg"></div>
+      <div class="htp-step-left">
+        <span class="htp-numeral">V</span>
+        <div class="htp-spine"></div>
+      </div>
+      <div class="htp-step-body">
+        <span class="htp-step-tag">Final Step</span>
+        <div class="htp-step-title">Begin Your Journey</div>
+        <div class="htp-step-desc">Open Minecraft Java 1.20+, connect to <em>mc.hogarth.net</em>, and step through the gates. Your story — and everything that follows — starts now.</div>
+        <button class="htp-step-cta" onclick="copyIP()">
+          Copy mc.hogarth.net <span class="htp-arrow">→</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="htp-seal" id="htp-seal">
+    <div class="htp-seal-ring">H</div>
+    <span class="htp-seal-label">Est. in the age of magic</span>
+  </div>
+
 </main>
 
 <div class="toast" id="toast"><strong id="tt"></strong><p id="tm"></p></div>
 <script src="shared.js"></script>
 <script src="nav-loader.js"></script>
+<script>
+  // Scroll-reveal for steps
+  const htpSteps = document.querySelectorAll('.htp-step');
+  const htpDots  = document.querySelectorAll('.htp-dot');
+  const htpSeal  = document.getElementById('htp-seal');
+
+  const htpReveal = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+
+  htpSteps.forEach(s => htpReveal.observe(s));
+  htpReveal.observe(htpSeal);
+
+  // Progress dot tracking
+  const htpProgress = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = parseInt(e.target.id.replace('htp-s', ''));
+        htpDots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.5, rootMargin: '-20% 0px -60% 0px' });
+
+  htpSteps.forEach(s => htpProgress.observe(s));
+
+  // Trigger for elements already in viewport on load
+  setTimeout(() => {
+    htpSteps.forEach(s => {
+      if (s.getBoundingClientRect().top < window.innerHeight * 0.9) {
+        s.classList.add('visible');
+      }
+    });
+  }, 60);
+</script>
 </body>
 </html>

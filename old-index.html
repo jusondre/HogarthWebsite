@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hogarth — A Wizarding Minecraft Realm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Cormorant+SC:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; background:#0d0b08; }
+
+:root {
+  --paper:  #f0e9dc;
+  --paper2: #e8dece;
+  --ink:    #231c12;
+  --ink2:   #3d3222;
+  --ink3:   #6b5c42;
+  --ink4:   #a08c70;
+  --ink5:   #c8b89a;
+  --gold:   #8a6830;
+  --trans:  360ms cubic-bezier(.4,0,.2,1);
+}
+
+/* grain overlay */
+body::after {
+  content:''; position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.032'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:9000; mix-blend-mode:multiply; opacity:.5;
+}
+
+/* ══ INTRO SCREEN ══ */
+#intro {
+  position:fixed; inset:0; z-index:500;
+  background:#0d0b08;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column;
+  transition:opacity 1.4s ease, visibility 1.4s ease;
+}
+#intro.fade-out {
+  opacity:0; visibility:hidden;
+  pointer-events:none;
+}
+
+/* Candle flicker — very subtle top vignette glow */
+#intro::before {
+  content:'';
+  position:absolute; inset:0;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(180,130,40,.04) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.intro-quote-wrap {
+  position:relative;
+  max-width:520px;
+  padding:0 2.5rem;
+  text-align:center;
+}
+
+/* The actual words container — words injected by JS */
+#quote-text {
+  font-family:'IM Fell English', serif;
+  font-size:clamp(1.1rem,2.2vw,1.45rem);
+  font-style:italic;
+  font-weight:400;
+  color:rgba(240,233,220,1);
+  line-height:1.95;
+  letter-spacing:.01em;
+}
+
+.q-word {
+  display:inline-block;
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity .55s ease, transform .55s ease;
+  color:rgba(240,233,220,1);
+  margin-right:.27em;
+}
+.q-word.visible {
+  opacity:1;
+  transform:translateY(0);
+}
+.q-word.fade-word {
+  opacity:0;
+  transform:translateY(-5px);
+  transition:opacity .45s ease, transform .45s ease;
+}
+
+/* Attribution line */
+#quote-attr {
+  margin-top:1.6rem;
+  font-family:'Cormorant SC', serif;
+  font-size:.52rem;
+  letter-spacing:.5em;
+  text-transform:uppercase;
+  color:rgba(160,140,112,0);
+  transition:color 1.2s ease, opacity 1.2s ease;
+}
+#quote-attr.show { color:rgba(160,140,112,.55); }
+#quote-attr.fade-attr {
+  opacity:0;
+  transition:opacity .7s ease;
+}
+
+/* The rule lines under the quote */
+.intro-rule {
+  display:flex; align-items:center; justify-content:center; gap:1rem;
+  margin-top:2.2rem;
+  opacity:0; transition:opacity 1s ease;
+}
+.intro-rule.show { opacity:1; }
+.intro-rule-line { width:44px; height:1px; background:linear-gradient(90deg,transparent,rgba(160,140,112,.25)); }
+.intro-rule-line.r { background:linear-gradient(90deg,rgba(160,140,112,.25),transparent); }
+.intro-rule-dot { width:2px; height:2px; border-radius:50%; background:rgba(160,140,112,.3); }
+
+/* Skip hint */
+#skip-hint {
+  position:absolute;
+  bottom:2.4rem; left:50%; transform:translateX(-50%);
+  font-family:'Cormorant SC',serif;
+  font-size:.5rem; letter-spacing:.42em; text-transform:uppercase;
+  color:rgba(160,140,112,.3);
+  opacity:0; transition:opacity .6s ease;
+  cursor:pointer;
+  white-space:nowrap;
+}
+#skip-hint.show { opacity:1; }
+#skip-hint:hover { color:rgba(160,140,112,.6); }
+
+/* background transitions for the body */
+body.bg-transition {
+  transition: background 1.4s ease;
+  background:#f0e9dc;
+}
+
+#footCanvas { position:fixed; inset:0; pointer-events:none; z-index:1; }
+
+/* ══ SITE ══ */
+#site {
+  position:fixed; inset:0; z-index:2;
+  display:flex; flex-direction:column;
+  opacity:0; pointer-events:none;
+  transition:opacity 1.3s ease .1s;
+}
+#site.show { opacity:1; pointer-events:all; }
+
+/* NAV */
+nav {
+  flex-shrink:0; height:62px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 clamp(1.4rem,5vw,4rem);
+  background:rgba(240,233,220,.97);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(35,28,18,.07);
+  position:relative; z-index:10;
+}
+.nav-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.3rem; font-weight:500; font-style:italic;
+  color:var(--ink); text-decoration:none; letter-spacing:.02em;
+}
+.nav-logo sup {
+  font-style:normal; font-size:.42em; letter-spacing:.28em;
+  vertical-align:super; color:var(--ink4);
+  font-family:'Cormorant SC',serif;
+}
+.nav-tabs { display:flex; align-items:center; gap:.2rem; list-style:none; }
+.nav-tab {
+  font-family:'Cormorant SC',serif;
+  font-size:.66rem; font-weight:400; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--ink3); background:transparent; border:none;
+  padding:.52rem 1rem; cursor:pointer; transition:color .22s;
+  position:relative;
+}
+.nav-tab::after {
+  content:''; position:absolute; bottom:0;
+  left:50%; right:50%; height:1.5px; background:var(--ink2);
+  transition:left .24s ease, right .24s ease;
+}
+.nav-tab:hover { color:var(--ink); }
+.nav-tab.active { color:var(--ink); }
+.nav-tab.active::after { left:1rem; right:1rem; }
+.nav-ip {
+  font-family:'Cormorant SC',serif;
+  font-size:.59rem; font-weight:400; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--paper); background:var(--ink); border:none;
+  padding:.58rem 1.35rem; cursor:pointer;
+  transition:background .22s, transform .14s;
+  position:relative; overflow:hidden; min-width:130px; text-align:center;
+}
+.nav-ip-addr, .nav-ip-hover {
+  display:block;
+  transition:opacity .22s, transform .22s;
+}
+.nav-ip-hover {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; transform:translateY(4px);
+  background:var(--ink2);
+}
+.nav-ip:hover .nav-ip-addr { opacity:0; transform:translateY(-4px); }
+.nav-ip:hover .nav-ip-hover { opacity:1; transform:translateY(0); }
+.nav-ip:hover { transform:translateY(-1px); }
+
+/* PAGES */
+.pages { flex:1; position:relative; overflow:hidden; }
+.page {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:2rem clamp(1.4rem,6vw,5rem);
+  opacity:0; pointer-events:none;
+  transform:translateY(10px);
+  transition:opacity var(--trans), transform var(--trans);
+}
+.page.active { opacity:1; pointer-events:all; transform:translateY(0); }
+
+/* ── HOME ── */
+.home-eye {
+  font-family:'Cormorant SC',serif;
+  font-size:.58rem; font-weight:300; letter-spacing:.55em; text-transform:uppercase;
+  color:var(--ink5); margin-bottom:1.5rem;
+}
+.home-title {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:clamp(3.4rem,9.5vw,7rem); line-height:.9;
+  color:var(--ink); letter-spacing:-.01em; margin-bottom:.15em;
+  text-align:center;
+}
+.home-title em { font-style:italic; display:block; color:var(--ink2); }
+.rule {
+  display:flex; align-items:center; justify-content:center;
+  gap:.9rem; margin:1.7rem auto;
+}
+.rule-line { width:55px; height:1px; background:linear-gradient(90deg,transparent,var(--ink4)); }
+.rule-line.r { background:linear-gradient(90deg,var(--ink4),transparent); }
+.rule-dot { width:3px; height:3px; border-radius:50%; background:var(--ink4); opacity:.55; }
+.home-desc {
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:300;
+  font-size:clamp(.95rem,1.8vw,1.15rem); color:var(--ink3);
+  max-width:380px; margin:0 auto 2.4rem; line-height:1.95; text-align:center;
+}
+.btns { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+.btn-s {
+  font-family:'Cormorant SC',serif;
+  font-size:.6rem; font-weight:400; letter-spacing:.42em; text-transform:uppercase;
+  color:var(--paper); background:var(--ink); border:1px solid var(--ink);
+  padding:.88rem 2.2rem; cursor:pointer;
+  transition:background .25s, transform .14s;
+  text-decoration:none; display:inline-block;
+}
+.btn-s:hover { background:var(--ink2); transform:translateY(-1px); }
+.btn-g {
+  font-family:'Cormorant SC',serif;
+  font-size:.6rem; font-weight:400; letter-spacing:.42em; text-transform:uppercase;
+  color:var(--ink2); background:transparent; border:1px solid var(--ink4);
+  padding:.88rem 2.2rem; cursor:pointer;
+  transition:border-color .25s, color .25s, transform .14s;
+  text-decoration:none; display:inline-block;
+}
+.btn-g:hover { border-color:var(--ink); color:var(--ink); transform:translateY(-1px); }
+.stats {
+  display:flex; gap:3rem; justify-content:center;
+  margin-top:3.2rem; flex-wrap:wrap;
+}
+.stat-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.8rem; font-weight:300; font-style:italic;
+  color:var(--ink2); line-height:1; margin-bottom:.2rem;
+}
+.stat-lbl {
+  font-family:'Cormorant SC',serif;
+  font-size:.53rem; font-weight:300; letter-spacing:.4em; text-transform:uppercase;
+  color:var(--ink5);
+}
+
+/* ── HOW TO PLAY ── */
+.htp-head { text-align:center; margin-bottom:2.8rem; }
+.htp-title {
+  font-family:'Cormorant Garamond',serif; font-weight:300; font-style:italic;
+  font-size:clamp(1.7rem,3.8vw,2.6rem); color:var(--ink); margin-bottom:.35rem;
+}
+.htp-sub {
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:300;
+  font-size:.95rem; color:var(--ink4);
+}
+.steps {
+  display:flex; gap:0; max-width:840px; width:100%;
+  border:1px solid rgba(35,28,18,.1);
+}
+.step {
+  flex:1; padding:2rem 1.8rem; position:relative;
+  background:rgba(240,233,220,.35); transition:background .3s; text-align:left;
+}
+.step:hover { background:rgba(232,222,206,.65); }
+.step:not(:last-child) { border-right:1px solid rgba(35,28,18,.1); }
+.step::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:2px; background:var(--ink);
+  transform:scaleX(0); transform-origin:left; transition:transform .4s ease;
+}
+.step:hover::before { transform:scaleX(1); }
+.step-n {
+  font-family:'Cormorant Garamond',serif;
+  font-size:3.2rem; font-weight:300; font-style:italic;
+  color:rgba(35,28,18,.07); line-height:1; margin-bottom:.7rem; display:block;
+}
+.step-t { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:400; color:var(--ink); margin-bottom:.55rem; }
+.step-d { font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:300; font-size:.85rem; color:var(--ink3); line-height:1.9; }
+.step-a {
+  display:inline-flex; align-items:center; gap:.5rem;
+  font-family:'Cormorant SC',serif;
+  font-size:.56rem; font-weight:400; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--ink3); background:none; border:none; cursor:pointer; padding:0; transition:color .2s;
+  margin-top:auto; padding-top:1.3rem; align-self:flex-start;
+}
+.step-a:hover { color:var(--ink); }
+.step-a svg { transition:transform .2s; }
+.step-a:hover svg { transform:translateX(3px); }
+/* 5 steps layout */
+.steps-five { max-width:1060px; }
+.steps { align-items:stretch; }
+.step { display:flex; flex-direction:column; text-align:left; }
+.step-d { flex:1; }
+
+
+/* ── SHOP ── */
+.shop-t { font-family:'Cormorant Garamond',serif; font-weight:300; font-style:italic; font-size:clamp(1.8rem,4.5vw,3rem); color:var(--ink); margin-bottom:.4em; }
+.shop-sub { font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:300; font-size:1rem; color:var(--ink4); max-width:360px; margin:0 auto 2.8rem; line-height:1.9; }
+.shop-tiles { display:flex; gap:1px; max-width:660px; width:100%; background:rgba(35,28,18,.08); border:1px solid rgba(35,28,18,.08); }
+.s-tile { flex:1; background:var(--paper); padding:1.8rem 1.4rem; transition:background .3s; text-align:center; }
+.s-tile:hover { background:rgba(232,222,206,.7); }
+.s-tile-i { font-size:1.5rem; display:block; margin-bottom:.7rem; opacity:.6; }
+.s-tile-n { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:400; color:var(--ink); margin-bottom:.3rem; }
+.s-tile-d { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:.78rem; color:var(--ink4); }
+.shop-note { margin-top:1.8rem; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:.85rem; color:var(--ink4); }
+.shop-note a { color:var(--ink3); text-decoration:underline; text-underline-offset:3px; transition:color .2s; cursor:pointer; }
+.shop-note a:hover { color:var(--ink); }
+
+/* ── LORE ── */
+#page-lore { text-align:left; max-width:800px; width:100%; }
+.lore-eye { font-family:'Cormorant SC',serif; font-size:.58rem; font-weight:300; letter-spacing:.55em; text-transform:uppercase; color:var(--ink5); margin-bottom:.9rem; }
+.lore-t { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(1.8rem,4vw,2.7rem); color:var(--ink); line-height:1.08; margin-bottom:1.8rem; }
+.lore-t em { font-style:italic; }
+.lore-body { display:grid; grid-template-columns:1fr 1px 1fr; gap:2.2rem; }
+.lore-col p { font-family:'Cormorant Garamond',serif; font-size:.93rem; font-weight:300; color:var(--ink3); line-height:2; margin-bottom:1.1rem; }
+.lore-col p:last-child { margin-bottom:0; }
+.lore-div { background:rgba(35,28,18,.1); align-self:stretch; }
+.lore-qcol { padding-left:.8rem; }
+.lore-q { font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:300; font-size:1.2rem; color:var(--ink2); line-height:1.7; margin-bottom:1rem; padding-left:1.1rem; position:relative; }
+.lore-q::before { content:''; position:absolute; left:0; top:.25em; bottom:.25em; width:1.5px; background:var(--ink4); }
+.lore-cite { font-family:'Cormorant SC',serif; font-size:.56rem; font-weight:300; letter-spacing:.4em; text-transform:uppercase; color:var(--ink5); font-style:normal; }
+.houses-list { margin-top:1.8rem; display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+.house-row { display:flex; align-items:center; gap:.7rem; padding:.65rem .85rem; border:1px solid rgba(35,28,18,.08); background:rgba(240,233,220,.45); transition:background .25s; }
+.house-row:hover { background:rgba(232,222,206,.8); }
+.house-n { font-family:'Cormorant Garamond',serif; font-size:.92rem; font-weight:400; color:var(--ink); }
+.house-tr { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:.76rem; color:var(--ink4); }
+
+/* ── LORE INNER TABS ── */
+.lore-tabs {
+  display:flex; gap:0;
+  border-bottom:1px solid rgba(35,28,18,.12);
+  width:100%;
+}
+.lore-tab {
+  font-family:'Cormorant SC',serif;
+  font-size:.62rem; font-weight:400; letter-spacing:.32em; text-transform:uppercase;
+  color:var(--ink4); background:transparent; border:none;
+  padding:.72rem 1.6rem; cursor:pointer;
+  position:relative; transition:color .22s;
+}
+.lore-tab::after {
+  content:''; position:absolute; bottom:-1px; left:0; right:0;
+  height:1.5px; background:var(--ink);
+  transform:scaleX(0); transition:transform .26s ease;
+}
+.lore-tab:hover { color:var(--ink2); }
+.lore-tab.active { color:var(--ink); }
+.lore-tab.active::after { transform:scaleX(1); }
+.lore-panel { display:none; }
+.lore-panel.active { display:block; }
+
+/* ── SPELLS ── */
+.spells-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:1.8rem; margin-top:.4rem; padding-bottom:1.5rem;
+}
+.spell-cat-label {
+  font-family:'Cormorant SC',serif;
+  font-size:.56rem; font-weight:400; letter-spacing:.38em; text-transform:uppercase;
+  color:var(--ink5); margin-bottom:.85rem;
+  padding-bottom:.55rem; border-bottom:1px solid rgba(35,28,18,.08);
+}
+.spell-list { display:flex; flex-direction:column; }
+.spell-row {
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:.4rem;
+  padding:.6rem 0; border-bottom:1px solid rgba(35,28,18,.05);
+}
+.spell-row:last-child { border-bottom:none; }
+.spell-name {
+  font-family:'IM Fell English',serif; font-style:italic;
+  font-size:.95rem; color:var(--ink); white-space:nowrap; flex-shrink:0;
+}
+.spell-desc {
+  font-family:'Cormorant Garamond',serif; font-weight:300;
+  font-size:.8rem; color:var(--ink4); line-height:1.7; flex:1; min-width:120px;
+}
+.spell-row.restricted .spell-name { color:var(--ink2); }
+.spell-badge {
+  font-family:'Cormorant SC',serif;
+  font-size:.47rem; letter-spacing:.3em; text-transform:uppercase;
+  color:rgba(100,40,20,.55); border:1px solid rgba(100,40,20,.2);
+  padding:.18rem .5rem; white-space:nowrap; align-self:center;
+}
+
+/* ── SUBJECTS ── */
+.subjects-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:1px; background:rgba(35,28,18,.08);
+  border:1px solid rgba(35,28,18,.08);
+  margin-top:.4rem; margin-bottom:1.5rem;
+}
+.subject-card {
+  background:var(--paper); padding:1.5rem 1.3rem; transition:background .3s;
+}
+.subject-card:hover { background:rgba(232,222,206,.7); }
+.subject-icon { font-size:1.2rem; display:block; margin-bottom:.55rem; opacity:.65; }
+.subject-name {
+  font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:400;
+  color:var(--ink); margin-bottom:.4rem;
+}
+.subject-desc {
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:300;
+  font-size:.78rem; color:var(--ink3); line-height:1.85; margin-bottom:.7rem;
+}
+.subject-year {
+  font-family:'Cormorant SC',serif;
+  font-size:.5rem; letter-spacing:.32em; text-transform:uppercase; color:var(--ink5);
+}
+
+/* ── DISCORD ── */
+#page-discord { text-align:center; }
+.dc-t { font-family:'Cormorant Garamond',serif; font-weight:300; font-style:italic; font-size:clamp(1.8rem,4.5vw,3rem); color:var(--ink); margin-bottom:.4em; }
+.dc-sub { font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:300; font-size:1rem; color:var(--ink3); max-width:400px; margin:0 auto 2.6rem; line-height:1.9; }
+.dc-cards { display:flex; gap:1px; max-width:660px; width:100%; background:rgba(35,28,18,.08); border:1px solid rgba(35,28,18,.08); margin-bottom:2.2rem; }
+.dc-card { flex:1; background:var(--paper); padding:1.8rem 1.4rem; transition:background .3s; text-align:center; }
+.dc-card:hover { background:rgba(232,222,206,.7); }
+.dc-i { font-size:1.5rem; display:block; margin-bottom:.7rem; opacity:.6; }
+.dc-nt { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:400; color:var(--ink); margin-bottom:.3rem; }
+.dc-nd { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:.78rem; color:var(--ink4); line-height:1.6; }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:1.8rem; right:1.8rem; z-index:8000;
+  background:var(--ink); padding:1rem 1.55rem;
+  transform:translateY(130%); transition:transform .4s cubic-bezier(.34,1.4,.64,1);
+  max-width:270px; border-left:2px solid rgba(184,146,42,.45);
+}
+.toast.show { transform:translateY(0); }
+.toast strong { font-family:'Cormorant SC',serif; font-size:.6rem; letter-spacing:.24em; text-transform:uppercase; color:var(--paper); display:block; margin-bottom:.2rem; }
+.toast p { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:.86rem; color:rgba(240,233,220,.58); }
+
+@keyframes risein { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+@media(max-width:780px){
+  .spells-grid { grid-template-columns:1fr; }
+  .subjects-grid { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:480px){
+  .subjects-grid { grid-template-columns:1fr; }
+}
+@media(max-width:680px){
+  .nav-tabs { display:none; }
+  .steps, .steps-five { flex-direction:column; }
+  .step:not(:last-child){ border-right:none; border-bottom:1px solid rgba(35,28,18,.1); }
+  .lore-body { grid-template-columns:1fr; }
+  .lore-div { display:none; }
+  .lore-qcol { padding-left:0; }
+  .shop-tiles, .dc-cards { flex-direction:column; }
+  .houses-list { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ INTRO ══ -->
+<div id="intro">
+  <div class="intro-quote-wrap">
+    <div id="quote-text" aria-label="Intro quote"></div>
+    <div class="intro-rule" id="intro-rule">
+      <div class="intro-rule-line"></div>
+      <div class="intro-rule-dot"></div>
+      <div class="intro-rule-line r"></div>
+    </div>
+    <div id="quote-attr">— The Hogarth Charter</div>
+  </div>
+  <div id="skip-hint" onclick="skipIntro()">skip</div>
+</div>
+
+<canvas id="footCanvas"></canvas>
+
+<!-- ══ SITE ══ -->
+<div id="site">
+  <nav>
+    <a class="nav-logo" href="#">Hogarth<sup>MC</sup></a>
+    <ul class="nav-tabs">
+      <li><button class="nav-tab active" data-page="home">Home</button></li>
+      <li><button class="nav-tab" data-page="howtoplay">How to Play</button></li>
+      <li><button class="nav-tab" data-page="shop">Shop</button></li>
+      <li><button class="nav-tab" data-page="lore">Lore</button></li>
+      <li><button class="nav-tab" data-page="discord">Discord</button></li>
+    </ul>
+    <button class="nav-ip" id="nav-ip-btn" onclick="copyIP()">
+      <span class="nav-ip-addr">mc.hogarth.net</span>
+      <span class="nav-ip-hover">Click to Copy</span>
+    </button>
+  </nav>
+
+  <div class="pages">
+
+    <!-- HOME -->
+    <div class="page active" id="page-home" style="text-align:center">
+      <div class="home-eye">A Wizarding Minecraft Realm · Java 1.20+</div>
+      <h1 class="home-title">Welcome to<br><em>Hogarth</em></h1>
+      <div class="rule">
+        <div class="rule-line"></div><div class="rule-dot"></div><div class="rule-line r"></div>
+      </div>
+      <p class="home-desc">Wander the corridors. Master your craft.<br>Find your house. Leave your mark.</p>
+      <div class="btns">
+        <button class="btn-s" onclick="gotoPage('howtoplay')">Begin Your Journey</button>
+        <button class="btn-g" onclick="copyIP()">Copy Server IP</button>
+      </div>
+      <div class="stats">
+        <div><div class="stat-num">12k+</div><div class="stat-lbl">Wizards</div></div>
+        <div><div class="stat-num">4</div><div class="stat-lbl">Houses</div></div>
+        <div><div class="stat-num">24/7</div><div class="stat-lbl">Online</div></div>
+        <div><div class="stat-num">1.20</div><div class="stat-lbl">Java</div></div>
+      </div>
+    </div>
+
+    <!-- HOW TO PLAY -->
+    <div class="page" id="page-howtoplay">
+      <div class="htp-head">
+        <h2 class="htp-title">How to Begin Your Journey</h2>
+        <p class="htp-sub">Five steps stand between you and the castle gates.</p>
+      </div>
+      <div class="steps steps-five">
+        <div class="step">
+          <span class="step-n">I</span>
+          <div class="step-t">Join the Discord</div>
+          <div class="step-d">Every journey begins here. Join our community, read the rules, and introduce yourself to the castle.</div>
+          <button class="step-a" onclick="showToast('Discord','discord.gg/hogarth — see you inside.')">
+            <span>Join Discord</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
+          </button>
+        </div>
+        <div class="step">
+          <span class="step-n">II</span>
+          <div class="step-t">Create Your Character</div>
+          <div class="step-d">Craft your original witch or wizard. Name, backstory, house preference — this is who you will be within these walls.</div>
+          <button class="step-a" onclick="gotoPage('lore')">
+            <span>Creating a Character</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
+          </button>
+        </div>
+        <div class="step">
+          <span class="step-n">III</span>
+          <div class="step-t">Get Approved</div>
+          <div class="step-d">Submit your character for review. The staff will read your application and grant entry to those who are ready.</div>
+          <button class="step-a" onclick="gotoPage('shop')">
+            <span>How to Get Approved</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
+          </button>
+        </div>
+        <div class="step">
+          <span class="step-n">IV</span>
+          <div class="step-t">Receive Your Letter</div>
+          <div class="step-d">Once approved, your Hogarth acceptance letter arrives in Discord. Your house is revealed. The castle is expecting you.</div>
+          <button class="step-a" onclick="showToast('Your Letter','Once approved, watch Discord — your Hogarth letter will arrive with your house revealed.')">
+            <span>More About Your Letter</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
+          </button>
+        </div>
+        <div class="step">
+          <span class="step-n">V</span>
+          <div class="step-t">Begin Your Journey</div>
+          <div class="step-d">Open Minecraft Java 1.20+, connect to mc.hogarth.net and step through the gates. Your story starts now.</div>
+          <button class="step-a" onclick="copyIP()">
+            <span>mc.hogarth.net</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHOP -->
+    <div class="page" id="page-shop" style="text-align:center">
+      <h2 class="shop-t">The Grand Emporium</h2>
+      <p class="shop-sub">The shop is having its final enchantments applied. Return when the candles are lit.</p>
+      <div class="shop-tiles">
+        <div class="s-tile"><span class="s-tile-i">⚔️</span><div class="s-tile-n">Ranks</div><div class="s-tile-d">Prefect · Seeker · Auror · Archmage</div></div>
+        <div class="s-tile"><span class="s-tile-i">✨</span><div class="s-tile-n">Cosmetics</div><div class="s-tile-d">Trails, cloaks & artefacts</div></div>
+        <div class="s-tile"><span class="s-tile-i">🦉</span><div class="s-tile-n">Familiars</div><div class="s-tile-d">Loyal companions await</div></div>
+      </div>
+      <p class="shop-note"><a onclick="showToast('Noted','We\'ll let you know when the shop opens.')">Notify me when the shop opens →</a></p>
+    </div>
+
+    <!-- LORE -->
+    <div class="page" id="page-lore" style="justify-content:flex-start; padding-top:2.2rem; overflow-y:auto;">
+      <div style="width:100%; max-width:860px;">
+
+        <div class="lore-tabs" id="lore-tabs">
+          <button class="lore-tab active" data-lore="about">About</button>
+          <button class="lore-tab" data-lore="spells">Spells</button>
+          <button class="lore-tab" data-lore="subjects">Subjects</button>
+        </div>
+
+        <!-- ABOUT -->
+        <div class="lore-panel active" id="lore-about">
+          <div class="lore-eye" style="margin-top:1.8rem;">The Chronicles of Hogarth</div>
+          <h2 class="lore-t">A world <em>ancient</em> beyond memory</h2>
+          <div class="lore-body">
+            <div class="lore-col">
+              <p>Long before the first students crossed the threshold, the grounds of Hogarth were a place of deep and unresolved magic. Ancient ley lines converge beneath the courtyard flagstones; the portraits are restless; the staircases still change on their own schedule.</p>
+              <p>Four great houses have vied for honour within these walls for generations. The sorting has never been wrong. Allegiances forged here last lifetimes.</p>
+              <p>Whether you seek knowledge in the restricted section, glory on the pitch, or power in the dungeons — the castle is watching, and it <em style="font-style:italic">remembers</em>.</p>
+            </div>
+            <div class="lore-div"></div>
+            <div class="lore-col lore-qcol">
+              <blockquote class="lore-q">"Courage is not the absence of fear — it is what you carry into the darkness alongside it."</blockquote>
+              <cite class="lore-cite">— From the Founding Charter of Hogarth</cite>
+              <div class="houses-list">
+                <div class="house-row"><span>🦅</span><div><div class="house-n">Ravenclaw</div><div class="house-tr">Wit &amp; Wisdom</div></div></div>
+                <div class="house-row"><span>🦁</span><div><div class="house-n">Gryffindor</div><div class="house-tr">Bravery &amp; Nerve</div></div></div>
+                <div class="house-row"><span>🐍</span><div><div class="house-n">Slytherin</div><div class="house-tr">Ambition &amp; Cunning</div></div></div>
+                <div class="house-row"><span>🦡</span><div><div class="house-n">Hufflepuff</div><div class="house-tr">Loyalty &amp; Patience</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SPELLS -->
+        <div class="lore-panel" id="lore-spells">
+          <div class="lore-eye" style="margin-top:1.8rem;">The Arcane Lexicon</div>
+          <h2 class="lore-t">Spells of <em>Hogarth</em></h2>
+          <div class="spells-grid">
+            <div class="spell-category">
+              <div class="spell-cat-label">Combat &amp; Duelling</div>
+              <div class="spell-list">
+                <div class="spell-row"><span class="spell-name">Expelliarmus</span><span class="spell-desc">Disarms an opponent, sending their wand flying from their grasp.</span></div>
+                <div class="spell-row"><span class="spell-name">Stupefy</span><span class="spell-desc">Stuns the target, leaving them temporarily immobile and senseless.</span></div>
+                <div class="spell-row"><span class="spell-name">Protego</span><span class="spell-desc">Raises a magical shield that deflects spells and minor physical forces.</span></div>
+                <div class="spell-row"><span class="spell-name">Incarcerous</span><span class="spell-desc">Conjures ropes that bind the target — useful in capture or restraint.</span></div>
+                <div class="spell-row"><span class="spell-name">Confringo</span><span class="spell-desc">Causes the target to explode in a burst of searing heat and force.</span></div>
+                <div class="spell-row"><span class="spell-name">Diffindo</span><span class="spell-desc">Slashes or severs the target — cloth, rope, or enchanted bindings alike.</span></div>
+              </div>
+            </div>
+            <div class="spell-category">
+              <div class="spell-cat-label">Utility &amp; Exploration</div>
+              <div class="spell-list">
+                <div class="spell-row"><span class="spell-name">Lumos</span><span class="spell-desc">Ignites a bright light at the tip of the wand, illuminating dark corridors.</span></div>
+                <div class="spell-row"><span class="spell-name">Accio</span><span class="spell-desc">Summons an object to the caster's hand from a distance.</span></div>
+                <div class="spell-row"><span class="spell-name">Alohomora</span><span class="spell-desc">Unlocks mundane locks and certain enchanted ones.</span></div>
+                <div class="spell-row"><span class="spell-name">Revelio</span><span class="spell-desc">Reveals hidden objects, concealed passages, and magical disguises nearby.</span></div>
+                <div class="spell-row"><span class="spell-name">Wingardium Leviosa</span><span class="spell-desc">Levitates objects with fine control over movement through the air.</span></div>
+                <div class="spell-row"><span class="spell-name">Reparo</span><span class="spell-desc">Mends broken objects, restoring them to their original whole form.</span></div>
+              </div>
+            </div>
+            <div class="spell-category">
+              <div class="spell-cat-label">Transfiguration &amp; Charms</div>
+              <div class="spell-list">
+                <div class="spell-row"><span class="spell-name">Evanesco</span><span class="spell-desc">Vanishes an object entirely, dissolving it from existence.</span></div>
+                <div class="spell-row"><span class="spell-name">Engorgio</span><span class="spell-desc">Enlarges the target, increasing its size and mass dramatically.</span></div>
+                <div class="spell-row"><span class="spell-name">Reducio</span><span class="spell-desc">Shrinks an enlarged object or creature back to a manageable scale.</span></div>
+                <div class="spell-row"><span class="spell-name">Confundo</span><span class="spell-desc">Bewilders the target, leaving them confused and easily misled.</span></div>
+                <div class="spell-row"><span class="spell-name">Silencio</span><span class="spell-desc">Renders the target completely mute — neither voice nor wand-sound escapes.</span></div>
+              </div>
+            </div>
+            <div class="spell-category">
+              <div class="spell-cat-label">Dark Arts &amp; Restricted</div>
+              <div class="spell-list">
+                <div class="spell-row restricted"><span class="spell-name">Sectumsempra</span><span class="spell-desc">A dark curse that lacerates the target with invisible, blade-like force.</span><span class="spell-badge">Restricted</span></div>
+                <div class="spell-row restricted"><span class="spell-name">Crucio</span><span class="spell-desc">One of the three Unforgivable Curses — inflicts unbearable torment upon the victim.</span><span class="spell-badge">Forbidden</span></div>
+                <div class="spell-row restricted"><span class="spell-name">Imperio</span><span class="spell-desc">Places the target entirely under the caster's will — banned at Hogarth absolutely.</span><span class="spell-badge">Forbidden</span></div>
+                <div class="spell-row restricted"><span class="spell-name">Legilimens</span><span class="spell-desc">Allows a skilled caster to enter and read the thoughts of an unwilling mind.</span><span class="spell-badge">Restricted</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBJECTS -->
+        <div class="lore-panel" id="lore-subjects">
+          <div class="lore-eye" style="margin-top:1.8rem;">The Academic Curriculum</div>
+          <h2 class="lore-t">Subjects <em>taught</em> at Hogarth</h2>
+          <div class="subjects-grid">
+            <div class="subject-card"><div class="subject-icon">🧪</div><div class="subject-name">Potions</div><div class="subject-desc">The art and science of brewing. Students learn to combine magical ingredients with precision — a wrongly measured ingredient can be as dangerous as any curse.</div><div class="subject-year">Years I–VII</div></div>
+            <div class="subject-card"><div class="subject-icon">⭐</div><div class="subject-name">Transfiguration</div><div class="subject-desc">Among the most complex branches of magic. Students learn to alter the form, nature, and very essence of objects — and eventually living creatures.</div><div class="subject-year">Years I–VII</div></div>
+            <div class="subject-card"><div class="subject-icon">🌿</div><div class="subject-name">Herbology</div><div class="subject-desc">The study of magical plants, fungi, and their properties. Many healing remedies and potion ingredients begin in the greenhouses of Hogarth.</div><div class="subject-year">Years I–VII</div></div>
+            <div class="subject-card"><div class="subject-icon">🔮</div><div class="subject-name">Divination</div><div class="subject-desc">The imprecise art of reading the future through tea leaves, crystal balls, and dream interpretation. Widely debated — but occasionally, unnervingly accurate.</div><div class="subject-year">Years III–VII</div></div>
+            <div class="subject-card"><div class="subject-icon">🌑</div><div class="subject-name">Defence Against the Dark Arts</div><div class="subject-desc">Practical training in countercurses, protective spells, and the identification of dangerous creatures and dark enchantments. A matter of survival.</div><div class="subject-year">Years I–VII</div></div>
+            <div class="subject-card"><div class="subject-icon">🦎</div><div class="subject-name">Care of Magical Creatures</div><div class="subject-desc">Students encounter, handle, and study the beasts of the magical world — from docile Nifflers to creatures whose temperaments demand great respect.</div><div class="subject-year">Years III–VII</div></div>
+            <div class="subject-card"><div class="subject-icon">✨</div><div class="subject-name">Charms</div><div class="subject-desc">The foundations of practical magic. Students master wand technique, incantation, and the precise application of magical will.</div><div class="subject-year">Years I–VII</div></div>
+            <div class="subject-card"><div class="subject-icon">🌙</div><div class="subject-name">Astronomy</div><div class="subject-desc">Observation of the night sky and its influence upon magical practice. Conducted from the castle's highest tower, often in the cold hours before dawn.</div><div class="subject-year">Years I–V</div></div>
+            <div class="subject-card"><div class="subject-icon">📜</div><div class="subject-name">History of Magic</div><div class="subject-desc">A record of the magical world's great conflicts, founding figures, and pivotal events. Dry in delivery — but those who study it find its secrets run deep.</div><div class="subject-year">Years I–V</div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DISCORD -->
+    <div class="page" id="page-discord" style="text-align:center">
+      <h2 class="dc-t">The Common Room</h2>
+      <p class="dc-sub">Our Discord is where the school lives between sessions — announcements, house points, events, and the occasional late-night theory about the third-floor corridor.</p>
+      <div class="dc-cards">
+        <div class="dc-card"><span class="dc-i">📣</span><div class="dc-nt">Announcements</div><div class="dc-nd">Server news, season starts and event dates.</div></div>
+        <div class="dc-card"><span class="dc-i">🏆</span><div class="dc-nt">House Points</div><div class="dc-nd">Live cup standings and weekly competitions.</div></div>
+        <div class="dc-card"><span class="dc-i">📜</span><div class="dc-nt">Rules & Lore</div><div class="dc-nd">Server guidelines and the founding history.</div></div>
+      </div>
+      <button class="btn-s" onclick="showToast('Discord','discord.gg/hogarth — see you inside.')">Join the Discord</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"><strong id="tt"></strong><p id="tm"></p></div>
+
+<script>
+/* ══ INTRO QUOTE ══ */
+const QUOTE = "Magic does not choose the worthy — it reveals them. What you carry through these doors is already yours. The castle only holds up the mirror.";
+const ATTR_DELAY_AFTER_LAST_WORD = 600;   // ms after last word before attr appears
+const HOLD_DURATION       = 2200;          // ms to hold the full quote
+const FADE_OUT_DURATION   = 900;           // ms for words to vanish
+const TRANSITION_DELAY    = 300;           // ms after words gone before site reveals
+
+let introSkipped = false;
+let introTimers  = [];
+
+function ti(fn, ms){ const id = setTimeout(fn, ms); introTimers.push(id); return id; }
+
+function skipIntro(){
+  if(introSkipped) return;
+  introSkipped = true;
+  introTimers.forEach(clearTimeout);
+  revealSite();
+}
+
+function revealSite(){
+  const intro = document.getElementById('intro');
+  intro.classList.add('fade-out');
+  document.body.classList.add('bg-transition');
+  ti(()=>{
+    document.getElementById('site').classList.add('show');
+    ti(startFeet, 400);
+  }, 700);
+}
+
+function runIntro(){
+  const container = document.getElementById('quote-text');
+  const words = QUOTE.split(' ');
+  const spans = [];
+
+  // Build word spans
+  words.forEach((w, i) => {
+    const sp = document.createElement('span');
+    sp.className = 'q-word';
+    sp.textContent = w;
+    container.appendChild(sp);
+    spans.push(sp);
+    // add space as text node except after last word
+    if(i < words.length - 1){
+      container.appendChild(document.createTextNode(' '));
+    }
+  });
+
+  // Stagger words in — 90ms between each word
+  const WORD_INTERVAL = 90;
+  const totalIn = words.length * WORD_INTERVAL + 400;
+
+  spans.forEach((sp, i) => {
+    ti(() => {
+      if(!introSkipped) sp.classList.add('visible');
+    }, 500 + i * WORD_INTERVAL);
+  });
+
+  // Show skip hint after a moment
+  ti(() => {
+    if(!introSkipped) document.getElementById('skip-hint').classList.add('show');
+  }, 900);
+
+  // Show ornamental rule + attribution
+  ti(() => {
+    if(!introSkipped){
+      document.getElementById('intro-rule').classList.add('show');
+      document.getElementById('quote-attr').classList.add('show');
+    }
+  }, totalIn + ATTR_DELAY_AFTER_LAST_WORD);
+
+  // Hold, then vanish words
+  const vanishStart = totalIn + ATTR_DELAY_AFTER_LAST_WORD + HOLD_DURATION;
+
+  ti(() => {
+    if(introSkipped) return;
+    // Fade words out in reverse stagger
+    spans.forEach((sp, i) => {
+      ti(() => {
+        sp.classList.add('fade-word');
+      }, i * 35);
+    });
+    // Fade attr + rule
+    document.getElementById('quote-attr').classList.add('fade-attr');
+    document.getElementById('intro-rule').style.opacity = '0';
+    document.getElementById('intro-rule').style.transition = 'opacity .6s ease';
+    document.getElementById('skip-hint').style.opacity = '0';
+    document.getElementById('skip-hint').style.transition = 'opacity .4s ease';
+  }, vanishStart);
+
+  // Then reveal the site
+  const siteReveal = vanishStart + spans.length * 35 + FADE_OUT_DURATION + TRANSITION_DELAY;
+  ti(() => {
+    if(!introSkipped) revealSite();
+  }, siteReveal);
+}
+
+/* ─── AUTO START ─── */
+window.addEventListener('DOMContentLoaded', () => {
+  ti(runIntro, 350);
+});
+
+/* ─── LORE INNER TABS ─── */
+document.querySelectorAll('.lore-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.lore-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.lore-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('lore-' + btn.dataset.lore).classList.add('active');
+  });
+});
+
+/* ─── PAGE NAV ─── */
+document.querySelectorAll('.nav-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{ gotoPage(btn.dataset.page, btn); });
+});
+
+function gotoPage(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);
+  if(pg) pg.classList.add('active');
+  if(btn && btn.classList) btn.classList.add('active');
+  else {
+    document.querySelectorAll('.nav-tab').forEach(t=>{
+      if(t.dataset.page===id) t.classList.add('active');
+    });
+  }
+}
+
+/* ─── FOOTPRINTS ─── */
+const cv=document.getElementById('footCanvas');
+const cx=cv.getContext('2d');
+let W,H;
+function resize(){ W=cv.width=innerWidth; H=cv.height=innerHeight; }
+window.addEventListener('resize',resize); resize();
+
+class Walker{
+  constructor(){
+    const e=Math.floor(Math.random()*4);
+    if(e===0){this.x=Math.random()*W;this.y=-30;}
+    else if(e===1){this.x=W+30;this.y=Math.random()*H;}
+    else if(e===2){this.x=Math.random()*W;this.y=H+30;}
+    else{this.x=-30;this.y=Math.random()*H;}
+    this.ang=Math.atan2(H/2-this.y,W/2-this.x)+(Math.random()-.5)*1.4;
+    this.spd=.9+Math.random()*.7;
+    this.sd=0; this.sg=24+Math.random()*10;
+    this.foot=1; this.prints=[];
+    this.age=0; this.maxAge=200+Math.random()*140;
+    this.sz=7+Math.random()*4.5;
+    this.wt=0; this.gone=false;
+  }
+  update(){
+    if(this.gone)return;
+    this.wt+=.018; this.ang+=Math.sin(this.wt)*.016;
+    this.x+=Math.cos(this.ang)*this.spd;
+    this.y+=Math.sin(this.ang)*this.spd;
+    this.sd+=this.spd; this.age++;
+    if(this.sd>=this.sg){
+      this.sd=0; this.foot*=-1;
+      const off=this.foot*this.sz*.5;
+      this.prints.push({
+        x:this.x+Math.cos(this.ang+Math.PI/2)*off,
+        y:this.y+Math.sin(this.ang+Math.PI/2)*off,
+        a:this.ang, al:1, sz:this.sz
+      });
+    }
+    for(let i=this.prints.length-1;i>=0;i--){
+      this.prints[i].al-=.0038;
+      if(this.prints[i].al<=0) this.prints.splice(i,1);
+    }
+    if(this.age>this.maxAge&&this.prints.length===0) this.gone=true;
+  }
+  draw(){
+    for(const p of this.prints){
+      cx.save();
+      cx.translate(p.x,p.y);
+      cx.rotate(p.a - Math.PI/2);
+      cx.globalAlpha=p.al*.15;
+      cx.fillStyle='#231c12';
+      cx.beginPath(); cx.ellipse(0,p.sz*.18,p.sz*.32,p.sz*.5,0,0,Math.PI*2); cx.fill();
+      cx.beginPath(); cx.ellipse(0,-p.sz*.36,p.sz*.24,p.sz*.17,0,0,Math.PI*2); cx.fill();
+      cx.restore();
+    }
+  }
+}
+
+const walkers=[];
+function startFeet(){
+  for(let i=0;i<3;i++) setTimeout(()=>walkers.push(new Walker()), i*1600);
+  requestAnimationFrame(loop);
+}
+function loop(){
+  cx.clearRect(0,0,W,H);
+  for(let i=walkers.length-1;i>=0;i--){
+    walkers[i].update(); walkers[i].draw();
+    if(walkers[i].gone){
+      walkers.splice(i,1);
+      setTimeout(()=>walkers.push(new Walker()),500+Math.random()*1200);
+    }
+  }
+  requestAnimationFrame(loop);
+}
+
+/* ─── UTILS ─── */
+function copyIP(){
+  navigator.clipboard.writeText('mc.hogarth.net')
+    .then(()=>showToast('Copied!','play.hogarth.net — paste into Minecraft.'))
+    .catch(()=>showToast('Server IP','mc.hogarth.net'));
+}
+let tt2;
+function showToast(t,m){
+  document.getElementById('tt').textContent=t;
+  document.getElementById('tm').textContent=m;
+  const el=document.getElementById('toast');
+  el.classList.add('show'); clearTimeout(tt2);
+  tt2=setTimeout(()=>el.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
