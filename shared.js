@@ -12,7 +12,7 @@ function initNav() {
     if (match) tab.classList.add('active');
   });
   // Lore sub-items
-  const lorePaths = ['about','spells','subjects'];
+  const lorePaths = ['about', 'spells', 'subjects'];
   lorePaths.forEach(id => {
     if (path === id + '.html') {
       document.getElementById('lore-nav-btn')?.classList.add('active');
@@ -28,9 +28,11 @@ function toggleLoreDropdown(e) {
   closeAllDropdowns();
   if (!open) wrap.classList.add('open');
 }
+
 function closeAllDropdowns() {
   document.getElementById('lore-nav-wrap')?.classList.remove('open');
 }
+
 document.addEventListener('click', closeAllDropdowns);
 
 let _toastTimer;

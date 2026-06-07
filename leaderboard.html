@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Cup — Hogarth MC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cormorant+SC:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  /* ── Page header ── */
+  .lb-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+  .lb-stars {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.6em;
+    color: var(--gold2);
+    margin-bottom: 1.2rem;
+    animation: lbFadeUp 0.6s ease both;
+  }
+  .lb-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    animation: lbFadeUp 0.7s 0.1s ease both;
+  }
+  .lb-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.05rem;
+    color: var(--ink4);
+    animation: lbFadeUp 0.7s 0.2s ease both;
+  }
+  .lb-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.6rem;
+    animation: lbFadeUp 0.7s 0.3s ease both;
+  }
+  .lb-divider::before,
+  .lb-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(122,90,32,.55), transparent);
+  }
+  .lb-divider span {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── House cards grid ── */
+  .houses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.8rem;
+    margin-bottom: 4rem;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .house-card {
+    position: relative;
+    border: 1px solid rgba(26,19,10,.13);
+    padding: 2rem 1.8rem 1.8rem;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .house-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .house-card:nth-child(1) { transition-delay: 0.05s; }
+  .house-card:nth-child(2) { transition-delay: 0.12s; }
+  .house-card:nth-child(3) { transition-delay: 0.19s; }
+  .house-card:nth-child(4) { transition-delay: 0.26s; }
+
+  .house-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    pointer-events: none;
+    transition: opacity 0.4s;
+  }
+  .house-card:hover::before { opacity: 0.13; }
+
+  .house-card.wyvern::before   { background: linear-gradient(135deg, #8b1a1a, transparent); }
+  .house-card.sylvan::before   { background: linear-gradient(135deg, #1a4a2e, transparent); }
+  .house-card.celestia::before { background: linear-gradient(135deg, #1a2a6c, transparent); }
+  .house-card.aurum::before    { background: linear-gradient(135deg, #7a5a00, transparent); }
+
+  .house-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--paper);
+  }
+  .wyvern .house-icon   { background: #8b1a1a; }
+  .sylvan .house-icon   { background: #1a4a2e; }
+  .celestia .house-icon { background: #1a2a6c; }
+  .aurum .house-icon    { background: #7a5a00; }
+
+  .house-rank-label {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.3em;
+    color: var(--ink5);
+    text-transform: uppercase;
+  }
+  .house-card.leader .house-rank-label { color: var(--gold2); }
+
+  .house-tag {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .wyvern .house-tag   { color: #8b1a1a; }
+  .sylvan .house-tag   { color: #1a4a2e; }
+  .celestia .house-tag { color: #1a2a6c; }
+  .aurum .house-tag    { color: #7a5a00; }
+
+  .house-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+  }
+  .house-motto {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.88rem;
+    color: var(--ink4);
+    margin-bottom: 1.4rem;
+    line-height: 1.5;
+  }
+
+  .house-bar-wrap { margin-bottom: 0.8rem; }
+  .house-bar-track {
+    height: 5px;
+    background: var(--paper3);
+    position: relative;
+    overflow: hidden;
+  }
+  .house-bar-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 1.3s cubic-bezier(.22,1,.36,1);
+  }
+  .wyvern .house-bar-fill   { background: linear-gradient(90deg, #5a1111, #c92a2a); }
+  .sylvan .house-bar-fill   { background: linear-gradient(90deg, #0f3320, #2d8a4e); }
+  .celestia .house-bar-fill { background: linear-gradient(90deg, #111e5e, #2244c8); }
+  .aurum .house-bar-fill    { background: linear-gradient(90deg, #5a4200, #c9930a); }
+
+  .house-pts-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .house-pts-num {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+  .wyvern .house-pts-num   { color: #8b1a1a; }
+  .sylvan .house-pts-num   { color: #1a4a2e; }
+  .celestia .house-pts-num { color: #1a2a6c; }
+  .aurum .house-pts-num    { color: #7a5a00; }
+
+  .house-pts-label {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.5rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink5);
+  }
+  .house-members-label {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.5rem;
+    letter-spacing: 0.25em;
+    color: var(--ink5);
+    text-align: right;
+  }
+  .house-members-num {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--ink);
+    text-align: right;
+  }
+
+  .house-card.leader { border-color: rgba(122,90,32,.3); }
+
+  /* ── Individual leaderboard ── */
+  .lb-section-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .lb-section-eyebrow {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.55em;
+    text-transform: uppercase;
+    color: var(--ink5);
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+  .lb-section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  .lb-table-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .lb-table-wrap.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .lb-row {
+    display: grid;
+    grid-template-columns: 44px 1fr 36px 110px;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid rgba(26,19,10,.13);
+    transition: background 0.18s;
+    cursor: default;
+  }
+  .lb-row:hover { background: rgba(227,212,191,.35); }
+  .lb-row:first-child { border-top: 1px solid rgba(26,19,10,.13); }
+
+  .lb-row.rank-1 { background: rgba(201,147,10,.05); }
+  .lb-row.rank-1:hover { background: rgba(201,147,10,.1); }
+  .lb-row.rank-2 { background: rgba(186,186,186,.04); }
+  .lb-row.rank-3 { background: rgba(180,120,50,.04); }
+
+  .lb-rank {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--ink5);
+    text-align: center;
+    line-height: 1;
+  }
+  .lb-rank.small {
+    font-family: 'Cormorant SC', serif;
+    font-style: normal;
+    font-size: 0.88rem;
+    letter-spacing: 0.1em;
+  }
+  .rank-1 .lb-rank { color: #b8943f; }
+  .rank-2 .lb-rank { color: #888; }
+  .rank-3 .lb-rank { color: #9a6a38; }
+
+  .lb-player-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .lb-player-house {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.5rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  .hc-w { color: #8b1a1a; }
+  .hc-s { color: #1a4a2e; }
+  .hc-c { color: #1a2a6c; }
+  .hc-a { color: #7a5a00; }
+
+  .lb-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    color: var(--paper);
+    font-weight: 500;
+  }
+  .lb-badge.w { background: #8b1a1a; }
+  .lb-badge.s { background: #1a4a2e; }
+  .lb-badge.c { background: #1a2a6c; }
+  .lb-badge.a { background: #7a5a00; }
+
+  .lb-pts-val {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--ink);
+    text-align: right;
+    line-height: 1;
+  }
+  .lb-pts-val span {
+    font-family: 'Cormorant SC', serif;
+    font-style: normal;
+    font-size: 0.48rem;
+    letter-spacing: 0.2em;
+    color: var(--ink5);
+    margin-left: 0.25rem;
+    vertical-align: middle;
+  }
+
+  /* ── Seal ── */
+  .lb-seal {
+    text-align: center;
+    margin-top: 4rem;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+  }
+  .lb-seal.visible { opacity: 0.35; }
+  .lb-seal-ring {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 1.6rem;
+    color: var(--gold);
+  }
+  .lb-seal-label {
+    display: block;
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.48rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-top: 0.7rem;
+  }
+
+  @keyframes lbFadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 540px) {
+    .lb-row { grid-template-columns: 36px 1fr 28px 80px; gap: 0.6rem; padding: 0.85rem 0.8rem; }
+    .lb-pts-val { font-size: 1.05rem; }
+    .houses-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 400px) {
+    .houses-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<main>
+
+  <div class="lb-header">
+    <span class="lb-stars">✦ &nbsp; ✦ &nbsp; ✦</span>
+    <h2 class="lb-title">The House Cup</h2>
+    <p class="lb-sub">Glory endures. The scoreboard remembers all.</p>
+    <div class="lb-divider"><span>House Standings &amp; Champions</span></div>
+  </div>
+
+  <!-- House standings -->
+  <div class="houses-grid">
+
+    <div class="house-card wyvern leader" id="hc-0">
+      <div class="house-rank-label">1st Place</div>
+      <div class="house-icon">W</div>
+      <span class="house-tag">House Wyvern</span>
+      <div class="house-name">Wyvern</div>
+      <div class="house-motto">"Through fire, we are forged."</div>
+      <div class="house-bar-wrap">
+        <div class="house-bar-track">
+          <div class="house-bar-fill" data-pct="91"></div>
+        </div>
+      </div>
+      <div class="house-pts-row">
+        <div>
+          <div class="house-pts-num" id="pts-0">0</div>
+          <div class="house-pts-label">House Points</div>
+        </div>
+        <div>
+          <div class="house-members-label">Members</div>
+          <div class="house-members-num">24</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="house-card celestia" id="hc-1">
+      <div class="house-rank-label">2nd Place</div>
+      <div class="house-icon">C</div>
+      <span class="house-tag">House Celestia</span>
+      <div class="house-name">Celestia</div>
+      <div class="house-motto">"Wisdom lights the eternal dark."</div>
+      <div class="house-bar-wrap">
+        <div class="house-bar-track">
+          <div class="house-bar-fill" data-pct="78"></div>
+        </div>
+      </div>
+      <div class="house-pts-row">
+        <div>
+          <div class="house-pts-num" id="pts-1">0</div>
+          <div class="house-pts-label">House Points</div>
+        </div>
+        <div>
+          <div class="house-members-label">Members</div>
+          <div class="house-members-num">21</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="house-card aurum" id="hc-2">
+      <div class="house-rank-label">3rd Place</div>
+      <div class="house-icon">A</div>
+      <span class="house-tag">House Aurum</span>
+      <div class="house-name">Aurum</div>
+      <div class="house-motto">"Worth is proven, never given."</div>
+      <div class="house-bar-wrap">
+        <div class="house-bar-track">
+          <div class="house-bar-fill" data-pct="64"></div>
+        </div>
+      </div>
+      <div class="house-pts-row">
+        <div>
+          <div class="house-pts-num" id="pts-2">0</div>
+          <div class="house-pts-label">House Points</div>
+        </div>
+        <div>
+          <div class="house-members-label">Members</div>
+          <div class="house-members-num">18</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="house-card sylvan" id="hc-3">
+      <div class="house-rank-label">4th Place</div>
+      <div class="house-icon">S</div>
+      <span class="house-tag">House Sylvan</span>
+      <div class="house-name">Sylvan</div>
+      <div class="house-motto">"Roots run deeper than stone."</div>
+      <div class="house-bar-wrap">
+        <div class="house-bar-track">
+          <div class="house-bar-fill" data-pct="51"></div>
+        </div>
+      </div>
+      <div class="house-pts-row">
+        <div>
+          <div class="house-pts-num" id="pts-3">0</div>
+          <div class="house-pts-label">House Points</div>
+        </div>
+        <div>
+          <div class="house-members-label">Members</div>
+          <div class="house-members-num">19</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Individual leaderboard -->
+  <div class="lb-section-header">
+    <span class="lb-section-eyebrow">The Champions</span>
+    <div class="rule" style="margin-bottom:1.2rem;">
+      <div class="rule-line"></div>
+      <div class="rule-dot"></div>
+      <div class="rule-dot"></div>
+      <div class="rule-dot"></div>
+      <div class="rule-line r"></div>
+    </div>
+    <h3 class="lb-section-title">Top Ten Scholars</h3>
+  </div>
+
+  <div class="lb-table-wrap" id="lb-table">
+
+    <div class="lb-row rank-1">
+      <div class="lb-rank">I</div>
+      <div>
+        <div class="lb-player-name">Evander Voss</div>
+        <div class="lb-player-house hc-w">House Wyvern</div>
+      </div>
+      <div class="lb-badge w">W</div>
+      <div class="lb-pts-val">2,840 <span>pts</span></div>
+    </div>
+
+    <div class="lb-row rank-2">
+      <div class="lb-rank">II</div>
+      <div>
+        <div class="lb-player-name">Seraphine Alcard</div>
+        <div class="lb-player-house hc-c">House Celestia</div>
+      </div>
+      <div class="lb-badge c">C</div>
+      <div class="lb-pts-val">2,610 <span>pts</span></div>
+    </div>
+
+    <div class="lb-row rank-3">
+      <div class="lb-rank">III</div>
+      <div>
+        <div class="lb-player-name">Oryn Blackthorn</div>
+        <div class="lb-player-house hc-w">House Wyvern</div>
+      </div>
+      <div class="lb-badge w">W</div>
+      <div class="lb-pts-val">2,405 <span>pts</span></div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank small">IV</div>
+      <div>
+        <div class="lb-player-name">Calliope Dayne</div>
+        <div class="lb-player-house hc-a">House Aurum</div>
+      </div>
+      <div class="lb-badge a">A</div>
+      <div class="lb-pts-val">2,190 <span>pts</span></div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank small">V</div>
+      <div>
+        <div class="lb-player-name">Theron Ashvale</div>
+        <div class="lb-player-house hc-c">House Celestia</div>
+      </div>
+      <div class="lb-badge c">C</div>
+      <div class="lb-pts-val">1,980 <span>pts</span></div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank small">VI</div>
+      <div>
+        <div class="lb-player-name">Isolde Marchant</div>
+        <div class="lb-player-house hc-s">House Sylvan</div>
+      </div>
+      <div class="lb-badge s">S</div>
+      <div class="lb-pts-val">1,755 <span>pts</span></div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank small">VII</div>
+      <div>
+        <div class="lb-player-name">Leander Crow</div>
+        <div class="lb-player-house hc-a">House Aurum</div>
+      </div>
+      <div class="lb-badge a">A</div>
+      <div class="lb-pts-val">1,620 <span>pts</span></div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank small">VIII</div>
+      <div>
+        <div class="lb-player-name">Vesper Holt</div>
+        <div class="lb-player-house hc-w">House Wyvern</div>
+      </div>
+      <div class="lb-badge w">W</div>
+      <div class="lb-pts-val">1,490 <span>pts</span></div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank small">IX</div>
+      <div>
+        <div class="lb-player-name">Mireille Fontaine</div>
+        <div class="lb-player-house hc-s">House Sylvan</div>
+      </div>
+      <div class="lb-badge s">S</div>
+      <div class="lb-pts-val">1,340 <span>pts</span></div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank small">X</div>
+      <div>
+        <div class="lb-player-name">Caspian Reed</div>
+        <div class="lb-player-house hc-c">House Celestia</div>
+      </div>
+      <div class="lb-badge c">C</div>
+      <div class="lb-pts-val">1,185 <span>pts</span></div>
+    </div>
+
+  </div>
+
+  <div class="lb-seal" id="lb-seal">
+    <div class="lb-seal-ring">H</div>
+    <span class="lb-seal-label">The Cup is eternal</span>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"><strong id="tt"></strong><p id="tm"></p></div>
+<script src="shared.js"></script>
+<script src="nav-loader.js"></script>
+<script>
+  const housePts = [4220, 3620, 2980, 2370];
+
+  function animateCount(el, target, duration) {
+    const start = performance.now();
+    function update(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(ease * target).toLocaleString();
+      if (t < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  // House card reveal + animate bars + count up
+  const houseCards = document.querySelectorAll('.house-card');
+  const cardObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const card = e.target;
+      card.classList.add('visible');
+      const idx = parseInt(card.id.replace('hc-', ''));
+      const fill = card.querySelector('.house-bar-fill');
+      const pct  = parseFloat(fill?.dataset.pct || 0);
+      const ptEl = document.getElementById('pts-' + idx);
+      setTimeout(() => {
+        if (fill) fill.style.width = pct + '%';
+        if (ptEl) animateCount(ptEl, housePts[idx], 1200);
+      }, 100 + idx * 80);
+      cardObs.unobserve(card);
+    });
+  }, { threshold: 0.15 });
+  houseCards.forEach(c => cardObs.observe(c));
+
+  // Table reveal
+  const tableObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        tableObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05 });
+  tableObs.observe(document.getElementById('lb-table'));
+
+  // Seal reveal
+  const sealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.3 });
+  sealObs.observe(document.getElementById('lb-seal'));
+
+  // Trigger cards already in viewport on load
+  setTimeout(() => {
+    houseCards.forEach(c => {
+      if (c.getBoundingClientRect().top < window.innerHeight * 0.9) {
+        c.dispatchEvent(new Event('intersect'));
+      }
+    });
+  }, 60);
+</script>
+</body>
+</html>
